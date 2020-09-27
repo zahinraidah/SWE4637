@@ -1,21 +1,51 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import Home from './src/screens/Home';
+import Profile from './src/screens/Profile';
+import sem1 from './src/screens/sem1';
+import sem2 from './src/screens/sem2';
+import sem3 from './src/screens/sem3';
+import FacultyList from './src/screens/FacultyList';
+import Semesters from './src/screens/Semesters';
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+
+
+const stack = createStackNavigator();
+
+function App(){
+  return(
+    <NavigationContainer>
+      <stack.Navigator initialRouteName="Home">
+        <stack.Screen name="Home" component= {Home} />
+        <stack.Screen name="Profile" component= {Profile}/>
+      </stack.Navigator>
+      {/*<stack.Navigator initialRouteName="Home">
+        <stack.Screen name="Home" component= {Home} />
+        <stack.Screen name="FacultyList" component= {FacultyList}/>
+      </stack.Navigator>
+      
+      <stack.Navigator initialRouteName="Home">
+        <stack.Screen name="Home" component= {Home} />
+        <stack.Screen name="Semesters" component= {Semesters}/>
+      </stack.Navigator>
+
+      <stack.Navigator initialRouteName="Home">
+        <stack.Screen name="Semesters" component= {Semesters} />
+        <stack.Screen name="1st Semester" component= {sem1}/>
+      </stack.Navigator>
+
+      <stack.Navigator initialRouteName="Home">
+        <stack.Screen name="Semesters" component= {Semesters} />
+        <stack.Screen name="2nd Semester" component= {sem2}/>
+      </stack.Navigator>
+
+      <stack.Navigator initialRouteName="Home">
+        <stack.Screen name="Semesters" component= {Semesters} />
+        <stack.Screen name="1st Semester" component= {sem3}/>
+  </stack.Navigator>*/}
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
