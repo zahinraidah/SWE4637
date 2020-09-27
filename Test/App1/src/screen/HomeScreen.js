@@ -3,6 +3,7 @@ import {Text, StyleSheet, View, Button, Image} from 'react-native';
 
 const HomeScreen = (props)=>{
     //console.log(props);
+    //console.log(require('../../assets/error1.png'));
     return (
         <View>
             <Text style = {styles.textStyle}>HomeScreen</Text>
@@ -16,7 +17,11 @@ const HomeScreen = (props)=>{
                 }
             />
             <Image
-                source = {require('../../assets/error1.png')}
+                height = "300"
+                width = "200"
+                //source = {require('../../assets/error1.png')} // some error here
+                source = {require ('../../assets/error1.png')}
+                source={{uri: 'https://picsum.photos/200/300'}}
             />
         </View>
         );
