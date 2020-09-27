@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, StyleSheet, View, Button} from 'react-native';
+import {Text, StyleSheet, View, Button, Image} from 'react-native';
 
 const HomeScreen = (props)=>{
     //console.log(props);
@@ -9,10 +9,14 @@ const HomeScreen = (props)=>{
             <Button
                 title="List Screen"
                 onPress={function (){
-                    props.navigation.navigate('List');
-                    conole.log ('Button Pressed');
+                    props.navigation.navigate("List");
+                    console.log ("Button Pressed");
+                    // something is probably wrong here
                     }
                 }
+            />
+            <Image
+                source = {require('../../assets/error1.png')}
             />
         </View>
         );
