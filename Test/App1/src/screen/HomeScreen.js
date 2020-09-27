@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, StyleSheet, View, Button, Image} from 'react-native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const HomeScreen = (props)=>{
     //console.log(props);
@@ -11,17 +12,19 @@ const HomeScreen = (props)=>{
                 title="List Screen"
                 onPress={function (){
                     props.navigation.navigate("ListScreen");
-                    //console.log ("Button Pressed");
+                    console.log ("Button Pressed");
                     }
                 }
             />
-            <Image
-                height = "300"
-                width = "200"
-                source = {require ('../../assets/error1.png')} // some error here
-                //source={{uri: 'https://reactjs.org/logo-og.png'}}
-                style={{width: 400, height: 400}}
-            />
+            <TouchableOpacity onPress={function (){console.log ("Button Pressed");}}>
+                <Image
+                    height = "300"
+                    width = "200"
+                    //source = {require ('../../assets/error1.png')} // some error here
+                    source={{uri: 'https://reactjs.org/logo-og.png'}}
+                    style={{width: 100, height: 100}}
+                />
+            </TouchableOpacity>
         </View>
         );
 };
