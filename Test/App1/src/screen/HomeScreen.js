@@ -10,18 +10,17 @@ const HomeScreen = (props)=>{
             <Button
                 title="List Screen"
                 onPress={function (){
-                    props.navigation.navigate("List");
-                    console.log ("Button Pressed");
-                    // something is probably wrong here
+                    props.navigation.navigate("ListScreen");
+                    //console.log ("Button Pressed");
                     }
                 }
             />
             <Image
                 height = "300"
                 width = "200"
-                //source = {require('../../assets/error1.png')} // some error here
-                source = {require ('../../assets/error1.png')}
-                source={{uri: 'https://picsum.photos/200/300'}}
+                source = {require ('../../assets/error1.png')} // some error here
+                //source={{uri: 'https://reactjs.org/logo-og.png'}}
+                style={{width: 400, height: 400}}
             />
         </View>
         );

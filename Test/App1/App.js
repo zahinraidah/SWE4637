@@ -12,9 +12,9 @@ const stack = createStackNavigator();
 function App(){
   return(
     <NavigationContainer>
-      <stack.Navigator initialRouteName="Home">
-        <stack.Screen name="Home" component= {HomeScreen} />
-        <stack.Screen name="List" component= {ListScreen}/>
+      <stack.Navigator initialRouteName="HomeScreen">
+        <stack.Screen name="HomeScreen" component= {HomeScreen} />
+        <stack.Screen name="ListScreen" component= {ListScreen}/>
       </stack.Navigator>
     </NavigationContainer>
   );
