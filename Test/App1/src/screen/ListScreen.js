@@ -20,7 +20,7 @@ const ListScreen = () => {
         <View style ={styles.viewStyle}>
             <FlatList
             data = {uni}
-            renderItem = {function(item){
+            renderItem = {function(item){ //there is an error "Text strings must be rendered within a <Text> component" 
                 return (
                     <Text style = {styles.textStyle}>{item.name} </Text>
                 )
