@@ -14,7 +14,7 @@ const FacultyList = () => {
         <View style={styles.viewStyle}>
           <FlatList
             showsVerticalScrollIndicator = {false}
-            data={courses}
+            data={teachers}
             renderItem={function ({ item }) {
               return <Text style={styles.textStyle}>{item.name}</Text>;
             }}

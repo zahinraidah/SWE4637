@@ -19,31 +19,13 @@ function App(){
       <stack.Navigator initialRouteName="Home">
         <stack.Screen name="Home" component= {Home} />
         <stack.Screen name="Profile" component= {Profile}/>
-      </stack.Navigator>
-      {/*<stack.Navigator initialRouteName="Home">
-        <stack.Screen name="Home" component= {Home} />
         <stack.Screen name="FacultyList" component= {FacultyList}/>
-      </stack.Navigator>
-      
-      <stack.Navigator initialRouteName="Home">
-        <stack.Screen name="Home" component= {Home} />
         <stack.Screen name="Semesters" component= {Semesters}/>
-      </stack.Navigator>
-
-      <stack.Navigator initialRouteName="Home">
-        <stack.Screen name="Semesters" component= {Semesters} />
         <stack.Screen name="1st Semester" component= {sem1}/>
-      </stack.Navigator>
-
-      <stack.Navigator initialRouteName="Home">
-        <stack.Screen name="Semesters" component= {Semesters} />
         <stack.Screen name="2nd Semester" component= {sem2}/>
+        <stack.Screen name="3rd Semester" component= {sem3}/>
       </stack.Navigator>
-
-      <stack.Navigator initialRouteName="Home">
-        <stack.Screen name="Semesters" component= {Semesters} />
-        <stack.Screen name="1st Semester" component= {sem3}/>
-  </stack.Navigator>*/}
+     
     </NavigationContainer>
   );
 }

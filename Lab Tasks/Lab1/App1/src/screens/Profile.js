@@ -24,9 +24,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "blue",
     marginVertical: 30,
+    alignSelf: "center",
   },
   viewStyle: {
-    alignItems: "center"
+    alignSelf: "center"
   },
 });
 export default Profile;

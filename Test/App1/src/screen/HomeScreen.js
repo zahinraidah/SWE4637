@@ -12,14 +12,20 @@ const HomeScreen = (props)=>{
                 title="List Screen"
                 onPress={function (){
                     props.navigation.navigate("ListScreen");
-                    console.log ("Button Pressed");
+                    //console.log ("List Button Pressed");
+                    }
+                }
+            />
+            <Button
+                title="Image Screen"
+                onPress={function (){
+                    props.navigation.navigate("ImageScreen");
+                    console.log ("Image Button Pressed");
                     }
                 }
             />
             <TouchableOpacity onPress={function (){console.log ("Button Pressed");}}>
                 <Image
-                    height = "300"
-                    width = "200"
                     //source = {require ('../../assets/error1.png')} // some error here
                     source={{uri: 'https://reactjs.org/logo-og.png'}}
                     style={{width: 100, height: 100}}
