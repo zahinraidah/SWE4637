@@ -14,24 +14,19 @@ const Home = (props)=>{
                     source={require ('../../assets/iutlogo.png')}
                     style={styles.imageStyle}
                 />
-            <Text style = {styles.textStyle}>Department of CSE{"\n"}Program: SWE</Text>
+            <Text style = {styles.textStyle}>Department of CSE{"\n"}Program: SWE{"\n"}{"\n"}</Text>
             <TouchableOpacity onPress={function (){props.navigation.navigate(Profile);}}>
-                <Text style = {styles.textStyle}>My Profile</Text>
+                <Text style = {styles.textStyle}>My Profile{"\n"}</Text>
             </TouchableOpacity>
             <Button
                 title="Semesters"
-                onPress={function (){
-                    props.navigation.navigate(Semesters);
-                    //console.log ("Button Pressed");
-                    }
-                }
+                onPress={function (){props.navigation.navigate(Semesters);}}
+                style = {styles.buttonStyle}
             />
             <Button
                 title="Faculty List"
-                onPress={function (){
-                    props.navigation.navigate(FacultyList);
-                    }
-                }
+                onPress={function (){props.navigation.navigate(FacultyList);}}
+                style = {styles.buttonStyle}
             />
         </View>
         );
@@ -44,14 +39,19 @@ const styles = StyleSheet.create(
             fontSize: 30,
             color:'blue',
             textAlign: "center",
+            margin: 20
         },
         imageStyle: {
-            height: 400,
+            height: 410,
             width: 250,
             alignSelf: 'center',
         },
         viewStyle: {
-            margin: 50
+            margin: 50,
+            alignSelf: 'center'
+        },
+        buttonStyle: {
+            color: "green",
         }
     }
 );

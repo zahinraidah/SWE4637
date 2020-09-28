@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   viewStyle: {
-      alignItems: "center"
-  },
+    margin: 50,
+    alignSelf: 'center'
+},
 });
 export default sem1;

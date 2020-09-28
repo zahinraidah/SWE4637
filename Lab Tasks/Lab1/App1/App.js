@@ -21,11 +21,10 @@ function App(){
         <stack.Screen name="Profile" component= {Profile}/>
         <stack.Screen name="FacultyList" component= {FacultyList}/>
         <stack.Screen name="Semesters" component= {Semesters}/>
-        <stack.Screen name="1st Semester" component= {sem1}/>
-        <stack.Screen name="2nd Semester" component= {sem2}/>
-        <stack.Screen name="3rd Semester" component= {sem3}/>
+        <stack.Screen initialRouteName="Semesters" name="sem1" component= {sem1}/>
+        <stack.Screen initialRouteName="Semesters" name="sem2" component= {sem2}/>
+        <stack.Screen initialRouteName="Semesters" name="sem3" component= {sem3}/>
       </stack.Navigator>
-     
     </NavigationContainer>
   );
 }

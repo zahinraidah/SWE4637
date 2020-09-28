@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View, FlatList, StyleSheet} from "react-native";
-const sem1 = () => {
+const sem3 = () => {
     const courses = [
         { name: "Math 4341: Linear Algebra" },
         { name: "CSE 4303: Data Structures" },
@@ -28,7 +28,8 @@ const styles = StyleSheet.create({
     marginVertical: 30,
   },
   viewStyle: {
-      alignItems: "center"
-  },
+    margin: 50,
+    alignSelf: 'center'
+},
 });
-export default sem1;
+export default sem3;
