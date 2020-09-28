@@ -1,9 +1,5 @@
 import React from 'react';
 import {Text, StyleSheet, View, Button, Image, TouchableOpacity} from 'react-native';
-//import { TouchableOpacity } from 'react-native-gesture-handler';
-import Profile from '../screens/Profile';
-import Semesters from '../screens/Semesters';
-import FacultyList from '../screens/FacultyList';
 
 const Home = (props)=>{
     //console.log(props);
@@ -15,19 +11,20 @@ const Home = (props)=>{
                     style={styles.imageStyle}
                 />
             <Text style = {styles.textStyle}>Department of CSE{"\n"}Program: SWE{"\n"}{"\n"}</Text>
-            <TouchableOpacity onPress={function (){props.navigation.navigate(Profile);}}>
+            <TouchableOpacity onPress={function (){props.navigation.navigate("Profile");}}>
                 <Text style = {styles.touchStyle}>My Profile{"\n"}</Text>
             </TouchableOpacity>
             <Button
                 title="Semesters"
-                onPress={function (){props.navigation.navigate(Semesters);}}
+                onPress={function (){props.navigation.navigate("Semesters");}}
                 color="green"
                 margin="15"
             />
             <Button
                 title="Faculty List"
-                onPress={function (){props.navigation.navigate(FacultyList);}}
-                color="green"
+                onPress={function (){props.navigation.navigate("FacultyList");}}
+                //color="green"
+                style = {styles.buttonStyle}
             />
         </View>
         );

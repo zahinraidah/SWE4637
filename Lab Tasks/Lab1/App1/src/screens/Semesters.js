@@ -11,7 +11,7 @@ const Semesters = (props) => {
         title="1st Semsester"
         color="green"
         onPress={function (){
-          props.navigation.navigate(sem1);
+          props.navigation.navigate("sem1");
           }
         }
       />
@@ -20,7 +20,7 @@ const Semesters = (props) => {
         color="green"
         margin="10"
           onPress={function (){
-            props.navigation.navigate(sem2);
+            props.navigation.navigate("sem2");
             }
           }
       />
@@ -28,7 +28,7 @@ const Semesters = (props) => {
         title="3rd Semsester"
         color="green"
           onPress={function (){
-            props.navigation.navigate(sem3);
+            props.navigation.navigate("sem3");
             }
         }
       />
