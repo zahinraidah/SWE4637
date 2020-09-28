@@ -10,7 +10,7 @@ const Semesters = (props) => {
       <Button
         title="1st Semsester"
         onPress={function (){
-          props.navigation.navigate(sem2);
+          props.navigation.navigate(sem1);
           }
         }
       />

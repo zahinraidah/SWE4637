@@ -1,14 +1,11 @@
 import React from "react";
-import { Text, View, StyleSheet} from "react-native";
+import { Text, View, StyleSheet, Image} from "react-native";
 const Profile = () => {
   return (
     <View style={styles.viewStyle}>
         <Image
-                height = "300"
-                width = "200"
-                alignItems = "center"
                 source = {require ('../../assets/Singles_38.jpg')}
-                style={{width: 100, height: 100}}
+                style={styles.imageStyle}
         />
         <Text style = {styles.textStyle}>
             Name: Zahin Raidah Maisha{"\n"}
@@ -27,7 +24,13 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   viewStyle: {
+    margin: 50,
     alignSelf: "center"
   },
+  imageStyle: {
+    height: 260,
+    width: 260,
+    alignSelf: 'center',
+},
 });
 export default Profile;

@@ -1,6 +1,6 @@
 import React from 'react';
-import {Text, StyleSheet, View, Button, Image} from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {Text, StyleSheet, View, Button, Image, TouchableOpacity} from 'react-native';
+//import { TouchableOpacity } from 'react-native-gesture-handler';
 import Profile from '../screens/Profile';
 import Semesters from '../screens/Semesters';
 import FacultyList from '../screens/FacultyList';
@@ -21,12 +21,13 @@ const Home = (props)=>{
             <Button
                 title="Semesters"
                 onPress={function (){props.navigation.navigate(Semesters);}}
+                //color="green"
                 style = {styles.buttonStyle}
             />
             <Button
                 title="Faculty List"
                 onPress={function (){props.navigation.navigate(FacultyList);}}
-                style = {styles.buttonStyle}
+                style={styles.buttonStyle}
             />
         </View>
         );
@@ -51,7 +52,7 @@ const styles = StyleSheet.create(
             alignSelf: 'center'
         },
         buttonStyle: {
-            color: "green",
+            color: 'green',
         }
     }
 );
