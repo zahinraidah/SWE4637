@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "App1",
-    "slug": "App1",
+    "name": "IUT_Info",
+    "slug": "IUT_Info",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
