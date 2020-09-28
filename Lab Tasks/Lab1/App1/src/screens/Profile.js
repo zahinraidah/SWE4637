@@ -4,7 +4,7 @@ const Profile = () => {
   return (
     <View style={styles.viewStyle}>
         <Image
-                source = {require ('../../assets/Singles_38.jpg')}
+                source = {require ('../../assets/profile.jpg')}
                 style={styles.imageStyle}
         />
         <Text style = {styles.textStyle}>
@@ -18,9 +18,9 @@ const Profile = () => {
 };
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize: 30,
-    color: "blue",
-    marginVertical: 30,
+    fontSize: 18,
+    color: "black",
+    margin: 20,
     alignSelf: "center",
   },
   viewStyle: {

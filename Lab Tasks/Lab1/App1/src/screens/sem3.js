@@ -23,7 +23,7 @@ const sem3 = () => {
 };
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize: 30,
+    fontSize: 15,
     color: "black",
     marginVertical: 30,
   },

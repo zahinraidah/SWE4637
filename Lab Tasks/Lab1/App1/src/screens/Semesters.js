@@ -9,6 +9,7 @@ const Semesters = (props) => {
     <View style={styles.viewStyle}>
       <Button
         title="1st Semsester"
+        color="green"
         onPress={function (){
           props.navigation.navigate(sem1);
           }
@@ -16,6 +17,7 @@ const Semesters = (props) => {
       />
       <Button
         title="2nd Semsester"
+        color="green"
           onPress={function (){
             props.navigation.navigate(sem2);
             }
@@ -23,6 +25,7 @@ const Semesters = (props) => {
       />
       <Button
         title="3rd Semsester"
+        color="green"
           onPress={function (){
             props.navigation.navigate(sem3);
             }
@@ -33,12 +36,12 @@ const Semesters = (props) => {
 };
 const styles = StyleSheet.create({
   textStyle: {
-    fontSize: 30,
+    fontSize: 15,
     color: "blue",
     marginVertical: 30,
   },
   viewStyle: {
-      margin: 200,
+      margin: 100,
       alignItems: 'center'
   },
 });

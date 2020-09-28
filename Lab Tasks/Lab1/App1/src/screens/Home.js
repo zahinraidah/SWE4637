@@ -16,18 +16,20 @@ const Home = (props)=>{
                 />
             <Text style = {styles.textStyle}>Department of CSE{"\n"}Program: SWE{"\n"}{"\n"}</Text>
             <TouchableOpacity onPress={function (){props.navigation.navigate(Profile);}}>
-                <Text style = {styles.textStyle}>My Profile{"\n"}</Text>
+                <Text style = {styles.touchStyle}>My Profile{"\n"}</Text>
             </TouchableOpacity>
             <Button
                 title="Semesters"
                 onPress={function (){props.navigation.navigate(Semesters);}}
-                //color="green"
-                style = {styles.buttonStyle}
+                color="green"
+                marginBottom="20"
+                padding="30"
             />
             <Button
                 title="Faculty List"
                 onPress={function (){props.navigation.navigate(FacultyList);}}
-                style={styles.buttonStyle}
+                color="green"
+                marginTop= "20"
             />
         </View>
         );
@@ -37,8 +39,8 @@ const Home = (props)=>{
 const styles = StyleSheet.create(
     {
         textStyle:{
-            fontSize: 30,
-            color:'blue',
+            fontSize: 18,
+            color:'black',
             textAlign: "center",
             margin: 20
         },
@@ -52,8 +54,16 @@ const styles = StyleSheet.create(
             alignSelf: 'center'
         },
         buttonStyle: {
-            color: 'green',
-        }
+            margin: 10,
+            color:'green',
+        },
+        touchStyle: {
+            fontSize: 18,
+            color:'blue',
+            textAlign: "center",
+            margin: 15,
+            textDecorationLine: 'underline',
+        },
     }
 );
 
