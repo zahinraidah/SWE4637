@@ -7,12 +7,8 @@ const Home = (props)=>{
     //console.log(require('../../assets/error1.png'));
     return (
         <View>
-            <Image
-                height = "300"
-                width = "200"
-                align = "center"
+            <Image style = {styles.viewStyle}
                 source={{uri: 'https://upload.wikimedia.org/wikipedia/en/d/d0/Islamic_University_of_Technology_%28coat_of_arms%29.png'}}
-                style={{width: 100, height: 100}}
             />
             <Text style = {styles.textStyle}>Department of CSE{"\n"}Program: SWE</Text>
             <TouchableOpacity onPress={function (){props.navigation.navigate("Profile");}}>
@@ -42,7 +38,13 @@ const styles = StyleSheet.create(
         textStyle:{
             fontSize: 30,
             color:'blue',
-            alignItems: "center"
+            textAlign: "center",
+        },
+        viewStyle: {
+            width: "100", 
+            height: "100",
+            justifyContent: 'center',
+            alignItems: 'center',
         },
     }
 );
