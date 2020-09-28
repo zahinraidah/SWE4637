@@ -7,31 +7,36 @@ import sem3 from '../screens/sem3';
 const Semesters = (props) => {
   return (
     <View style={styles.viewStyle}>
-      <Button
-        title="1st Semsester"
-        color="green"
-        onPress={function (){
-          props.navigation.navigate("sem1");
-          }
-        }
-      />
-      <Button
-        title="2nd Semsester"
-        color="green"
-        margin="10"
+      <View style = {styles.buttonStyle}>
+        <Button
+          title="1st Semsester"
           onPress={function (){
-            props.navigation.navigate("sem2");
+            props.navigation.navigate("sem1");
             }
           }
-      />
-      <Button
-        title="3rd Semsester"
-        color="green"
-          onPress={function (){
-            props.navigation.navigate("sem3");
+          color="green"
+        />
+      </View>
+      <View style = {styles.buttonStyle}>
+        <Button
+          title="2nd Semsester"
+            onPress={function (){
+              props.navigation.navigate("sem2");
+              }
             }
-        }
-      />
+          color="green"
+        />
+      </View>
+      <View style = {styles.buttonStyle}>
+        <Button
+          title="3rd Semsester"
+            onPress={function (){
+              props.navigation.navigate("sem3");
+              }
+          }
+          color="green"
+        />
+      </View>
     </View>
   );
 };
@@ -45,5 +50,8 @@ const styles = StyleSheet.create({
       margin: 100,
       alignItems: 'center'
   },
+  buttonStyle: {
+    margin: 5,
+},
 });
 export default Semesters;

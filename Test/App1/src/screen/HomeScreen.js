@@ -7,7 +7,7 @@ const HomeScreen = (props) => {
         <Button
           title="Go To List"
           onPress={function () {
-            props.navigation.navigate("List");
+            props.navigation.navigate("ListScreen");
           }}
         />
       </View>
@@ -15,7 +15,7 @@ const HomeScreen = (props) => {
         <Button
           title="Go To ImageScreen"
           onPress={function () {
-            props.navigation.navigate("Image");
+            props.navigation.navigate("ImageScreen");
           }}
         />
       </View>

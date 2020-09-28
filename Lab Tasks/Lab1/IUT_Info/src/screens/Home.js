@@ -1,10 +1,9 @@
 import React from 'react';
-import {Text, StyleSheet, View, Button, Image, TouchableOpacity} from 'react-native';
+import {Text, StyleSheet, View, Button, Image, TouchableOpacity, ScrollView} from 'react-native';
 
 const Home = (props)=>{
-    //console.log(props);
-    //console.log(require('../../assets/error1.png'));
     return (
+    <ScrollView>
         <View style= {styles.viewStyle}>
                 <Image
                     source={require ('../../assets/iutlogo.png')}
@@ -14,19 +13,23 @@ const Home = (props)=>{
             <TouchableOpacity onPress={function (){props.navigation.navigate("Profile");}}>
                 <Text style = {styles.touchStyle}>My Profile{"\n"}</Text>
             </TouchableOpacity>
-            <Button
-                title="Semesters"
-                onPress={function (){props.navigation.navigate("Semesters");}}
-                color="green"
-                margin="15"
-            />
-            <Button
-                title="Faculty List"
-                onPress={function (){props.navigation.navigate("FacultyList");}}
-                //color="green"
-                style = {styles.buttonStyle}
-            />
+            <View style = {styles.buttonStyle}>
+                <Button
+                    title="Semesters"
+                    onPress={function (){props.navigation.navigate("Semesters");}}
+                    color="green"
+                    margin="15"
+                />
+            </View>
+            <View style = {styles.buttonStyle}>
+                <Button
+                    title="Faculty List"
+                    onPress={function (){props.navigation.navigate("FacultyList");}}
+                    color="green"
+                />
+            </View>
         </View>
+    </ScrollView>
         );
 };
 
@@ -49,8 +52,7 @@ const styles = StyleSheet.create(
             alignSelf: 'center'
         },
         buttonStyle: {
-            margin: 10,
-            color:'green',
+            margin: 5,
         },
         touchStyle: {
             fontSize: 18,
