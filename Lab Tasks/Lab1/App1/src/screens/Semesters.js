@@ -18,6 +18,7 @@ const Semesters = (props) => {
       <Button
         title="2nd Semsester"
         color="green"
+        margin="10"
           onPress={function (){
             props.navigation.navigate(sem2);
             }

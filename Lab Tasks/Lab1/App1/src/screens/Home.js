@@ -22,14 +22,12 @@ const Home = (props)=>{
                 title="Semesters"
                 onPress={function (){props.navigation.navigate(Semesters);}}
                 color="green"
-                marginBottom="20"
-                padding="30"
+                margin="15"
             />
             <Button
                 title="Faculty List"
                 onPress={function (){props.navigation.navigate(FacultyList);}}
                 color="green"
-                marginTop= "20"
             />
         </View>
         );
