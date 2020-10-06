@@ -18,15 +18,22 @@ const HomeScreen = (props) => {
             props.navigation.navigate("ImageScreen");
           }}
         />
+        </View>
+        <View style={styles.buttonStyle}>
+          <Button
+          title="Go To StorageScreen"
+          onPress={function () {
+            props.navigation.navigate("StorageScreen");
+          }}
+        />
       </View>
-      <Text>This is Home</Text>
     </View>
   );
 };
 const styles = StyleSheet.create({
   buttonStyle: {
     margin: 5,
-    borderColor: "red",
+    borderColor: "blue",
     borderWidth: 3,
   },
 });
