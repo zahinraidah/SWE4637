@@ -8,6 +8,8 @@ import HomeScreen from './src/screen/HomeScreen';
 import ListScreen from './src/screen/ListScreen';
 import ImageScreen from './src/screen/ImageScreen';
 import StorageScreen from './src/screen/StorageScreen';
+import StateScreen from './src/screen/StateScreen';
+import BoxScreen from './src/screen/BoxScreen';
 
 const stack = createStackNavigator();
 
@@ -19,6 +21,9 @@ function App(){
         <stack.Screen name="ListScreen" component= {ListScreen}/>
         <stack.Screen name="ImageScreen" component= {ImageScreen}/>
         <stack.Screen name="StorageScreen" component= {StorageScreen}/>
+        <stack.Screen name="StateScreen" component= {StateScreen}/>
+        <stack.Screen name="BoxScreen" component= {BoxScreen}/>
+
       </stack.Navigator>
     </NavigationContainer>
   );

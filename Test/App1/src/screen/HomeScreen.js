@@ -26,6 +26,22 @@ const HomeScreen = (props) => {
             props.navigation.navigate("StorageScreen");
           }}
         />
+        </View>
+        <View style={styles.buttonStyle}>
+          <Button
+            title="Go To StateScreen"
+            onPress={function () {
+              props.navigation.navigate("StateScreen");
+            }}
+          />
+        </View>
+        <View style={styles.buttonStyle}>
+          <Button
+            title="Go To BoxScreen"
+            onPress={function () {
+              props.navigation.navigate("BoxScreen");
+            }}
+          />
       </View>
     </View>
   );
