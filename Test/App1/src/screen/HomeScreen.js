@@ -37,9 +37,17 @@ const HomeScreen = (props) => {
         </View>
         <View style={styles.buttonStyle}>
           <Button
-            title="Go To BoxScreen"
+            title="Go To Box Screen"
             onPress={function () {
               props.navigation.navigate("BoxScreen");
+            }}
+          />
+      </View>
+      <View style={styles.buttonStyle}>
+          <Button
+            title="Go To Input Screen"
+            onPress={function () {
+              props.navigation.navigate("InputScreen");
             }}
           />
       </View>

@@ -10,6 +10,7 @@ import ImageScreen from './src/screen/ImageScreen';
 import StorageScreen from './src/screen/StorageScreen';
 import StateScreen from './src/screen/StateScreen';
 import BoxScreen from './src/screen/BoxScreen';
+import InputScreen from './src/screen/InputScreen';
 
 const stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ function App(){
         <stack.Screen name="StorageScreen" component= {StorageScreen}/>
         <stack.Screen name="StateScreen" component= {StateScreen}/>
         <stack.Screen name="BoxScreen" component= {BoxScreen}/>
+        <stack.Screen name="InputScreen" component= {InputScreen}/>
 
       </stack.Navigator>
     </NavigationContainer>
