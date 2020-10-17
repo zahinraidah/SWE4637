@@ -1,5 +1,6 @@
 import React from "react";
 import { Text, View, StyleSheet, FlatList } from "react-native";
+
 const ListScreen = () => {
   const uni = [
     { name: "BUET" },
@@ -8,18 +9,12 @@ const ListScreen = () => {
     { name: "RUET" },
     { name: "DUET" },
   ];
-  const uni_1 = "BUET";
-  const uni_2 = "IUT";
-  const uni_3 = "DU";
-  const uni_4 = "RUET";
-  const uni_5 = "CUET";
-  const uni_6 = "SUST";
-  const uni_7 = "IBA DU";
-  const uni_8 = "IUB";
+
+
   return (
     <View style={styles.viewStyle}>
       <FlatList
-        showsVerticalScrollIndicator = {false}
+        style={styles.ListStyle}
         data={uni}
         renderItem={function ({ item }) {
           //there is an error "Text strings must be rendered within a <Text> component"
@@ -29,6 +24,7 @@ const ListScreen = () => {
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   textStyle: {
     fontSize: 30,
@@ -39,5 +35,7 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 5,
   },
+  ListStyle: {},
 });
+
 export default ListScreen;

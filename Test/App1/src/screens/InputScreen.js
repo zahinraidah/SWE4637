@@ -8,7 +8,7 @@ import {
   Switch,
 } from "react-native";
 
-import {Picker} from "@react-native-community/picker";
+import { Picker } from "@react-native-community/picker";
 
 const InputScreen = () => {
   let [username, setusername] = useState("");
@@ -46,9 +46,9 @@ const InputScreen = () => {
           setlang(itemValue);
         }}
       >
-        <Picker.Item label="English" value="English" />
-        <Picker.Item label="Spanish" value="Spanish" />
-        <Picker.Item label="Bangla" value="Bangla" />
+        <Picker.Item label="English" value="english" />
+        <Picker.Item label="Spanish" value="spanish" />
+        <Picker.Item label="Hieroglyph" value="hieroglyph" />
         <Picker.Item label="Latin" value="Latin" />
       </Picker>
 
