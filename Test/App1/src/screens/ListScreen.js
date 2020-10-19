@@ -3,11 +3,11 @@ import { Text, View, StyleSheet, FlatList } from "react-native";
 
 const ListScreen = () => {
   const uni = [
-    { name: "BUET" },
-    { name: "KUET" },
-    { name: "CUET" },
-    { name: "RUET" },
-    { name: "DUET" },
+    { name: "BUET", key:"1" },
+    { name: "KUET", key: "2" },
+    { name: "CUET", key: "3"},
+    { name: "RUET", key: "4"},
+    { name: "DUET", key: "5"},
   ];
 
 

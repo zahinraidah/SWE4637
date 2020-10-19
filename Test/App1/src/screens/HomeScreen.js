@@ -41,7 +41,6 @@ const HomeScreen = (props) => {
       />
       <Button
         title="Input Screen"
-        color="green"
         onPress={function () {
           props.navigation.navigate("Input");
         }}

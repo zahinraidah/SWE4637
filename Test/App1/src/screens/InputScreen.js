@@ -60,13 +60,13 @@ const InputScreen = () => {
 const styles = StyleSheet.create({
   textStyle: {
     fontSize: 30,
-    color: "red",
+    color: "blue",
     margin: 20,
     padding: 10,
   },
 
   inputStyle: {
-    borderColor: "green",
+    borderColor: "blue",
     borderWidth: 2,
     margin: 10,
     padding: 5,
