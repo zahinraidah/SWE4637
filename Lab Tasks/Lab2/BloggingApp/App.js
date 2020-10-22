@@ -6,6 +6,7 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "./src/screens/HomeScreen";
 import NotificationScreen from "./src/screens/NotificationScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
+import PostScreen from "./src/screens/PostScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SignInScreen from "./src/screens/SignInScreen";
 
@@ -14,6 +15,7 @@ import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
 const AuthStack = createStackNavigator();
 const HomeTab = createMaterialBottomTabNavigator();
 const AppDrawer = createDrawerNavigator();
+const PostStack = createStackNavigator();
 
 const AppDrawerScreen = () => {
   return (
@@ -29,7 +31,7 @@ const HomeTabScreen = () => {
     <HomeTab.Navigator initialRouteName="Home">
       <HomeTab.Screen
         name="Home"
-        component={HomeScreen}
+        component={PostStackScreen}
         options={{
           tabBarLabel: "Home",
           tabBarIcon: ({ focused }) =>
@@ -58,6 +60,23 @@ const HomeTabScreen = () => {
         }}
       />
     </HomeTab.Navigator>
+  );
+};
+
+const PostStackScreen = () => {
+  return (
+    <AuthStack.Navigator initialRouteName="Home">
+      <PostStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <PostStack.Screen
+        name="PostScreen"
+        component={PostScreen}
+        options={{ headerShown: false }}
+      />
+    </AuthStack.Navigator>
   );
 };
 
