@@ -6,16 +6,16 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import HomeScreen from "./src/screens/HomeScreen";
 import NotificationScreen from "./src/screens/NotificationScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
-import PostScreen from "./src/screens/PostScreen";
 import SignUpScreen from "./src/screens/SignUpScreen";
 import SignInScreen from "./src/screens/SignInScreen";
 
 import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
 import { Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
+import PostScreen from "./src/screens/PostScreen";
 const AuthStack = createStackNavigator();
+const PostStack = createStackNavigator();
 const HomeTab = createMaterialBottomTabNavigator();
 const AppDrawer = createDrawerNavigator();
-const PostStack = createStackNavigator();
 
 const AppDrawerScreen = () => {
   return (
@@ -25,7 +25,22 @@ const AppDrawerScreen = () => {
     </AppDrawer.Navigator>
   );
 };
-
+const PostStackScreen = () => {
+  return (
+    <PostStack.Navigator initialRouteName="HomeScreen">
+      <PostStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <PostStack.Screen
+        name="PostScreen"
+        component={PostScreen}
+        options={{ headerShown: false }}
+      />
+    </PostStack.Navigator>
+  );
+};
 const HomeTabScreen = () => {
   return (
     <HomeTab.Navigator initialRouteName="Home">
@@ -38,8 +53,8 @@ const HomeTabScreen = () => {
             focused ? (
               <Entypo name="home" color="white" size={26} />
             ) : (
-              <AntDesign name="home" color="white" size={22} />
-            ),
+                <AntDesign name="home" color="white" size={22} />
+              ),
         }}
       />
       <HomeTab.Screen
@@ -51,32 +66,15 @@ const HomeTabScreen = () => {
             focused ? (
               <Ionicons name="ios-notifications" size={26} color="white" />
             ) : (
-              <Ionicons
-                name="ios-notifications-outline"
-                size={22}
-                color="white"
-              />
-            ),
+                <Ionicons
+                  name="ios-notifications-outline"
+                  size={22}
+                  color="white"
+                />
+              ),
         }}
       />
     </HomeTab.Navigator>
-  );
-};
-
-const PostStackScreen = () => {
-  return (
-    <AuthStack.Navigator initialRouteName="Home">
-      <PostStack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <PostStack.Screen
-        name="PostScreen"
-        component={PostScreen}
-        options={{ headerShown: false }}
-      />
-    </AuthStack.Navigator>
   );
 };
 

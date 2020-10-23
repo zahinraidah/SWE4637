@@ -1,53 +1,33 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack';
+import IndexScreen from './src/screens/IndexScreen';
+import React from 'react';
+import { Provider as BlogProvider } from './src/context/BlogContext';
+import ShowScreen from './src/screens/ShowScreen'
+import CreateScreen from './src/screens/CreateScreen';
+import EditScreen from './src/screens/EditScreen';
 
-import HomeScreen from "./src/screens/HomeScreen";
-import SignUpScreen from "./src/screens/SignUpScreen";
-import SignInScreen from "./src/screens/SignInScreen";
+const navigator = createStackNavigator(
+  {
+  Index: IndexScreen,
+  Show: ShowScreen,
+  Create: CreateScreen,
+  Edit: EditScreen,
+  }, 
+  {
+  initialRouteName: 'Index',
+  defaultNavigationOptions: {
+    title: 'Blogs'
+  }
+});
 
-import { AuthContext, AuthProvider } from "./src/providers/AuthProvider";
+const App = createAppContainer(navigator);
 
-const HomeStack = createStackNavigator();
-const AuthStack = createStackNavigator();
-
-const HomeStackScreen = () => {
-  return (
-    <HomeStack.Navigator initialRouteName="Home">
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-    </HomeStack.Navigator>
+export default () => {
+  return(
+    <BlogProvider>
+       <App />
+    </BlogProvider>
   );
 };
 
-const AuthStackScreen = () => {
-  return (
-    <AuthStack.Navigator initialRouteName="SignIn">
-      <AuthStack.Screen
-        name="SignIn"
-        component={SignInScreen}
-        options={{ headerShown: false }}
-      />
-      <AuthStack.Screen
-        name="SignUp"
-        component={SignUpScreen}
-        options={{ headerShown: false }}
-      />
-    </AuthStack.Navigator>
-  );
-};
-
-function App() {
-  return (
-    <AuthProvider>
-      <AuthContext.Consumer>
-        {(auth) => (
-          <NavigationContainer>
-            {auth.IsLoggedIn ? <HomeStackScreen /> : <AuthStackScreen />}
-          </NavigationContainer>
-        )}
-      </AuthContext.Consumer>
-    </AuthProvider>
-  );
-}
-
-export default App;
