@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
-import { Card, Button, Input } from "react-native-elements";
-import PostCard from "./../components/PostCard";
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Card, Text } from "react-native-elements";
+
 import { AuthContext } from "../providers/AuthProvider";
 import { getPosts } from "./../requests/Posts";
 import { getUsers } from "./../requests/Users";
+
+import PostCard from "./../components/PostCard";
 import HeaderTop from "./../components/HeaderTop";
+import InputCard from "../components/InputCard";
+import LikeCommentButton from "../components/LikeCommentButton";
 
 const HomeScreen = (props) => {
   const [posts, setPosts] = useState([]);
@@ -52,27 +55,31 @@ const HomeScreen = (props) => {
               }}
             />
             <Card>
-              <Input
-                placeholder="What's On Your Mind?"
-                leftIcon={<Entypo name="pencil" size={24} color="black" />}
+              <InputCard
+                Text="What's On Your Mind?"
               />
-              <Button title="Post" type="outline" onPress={function () { }} />
             </Card>
-
             <FlatList
               data={posts}
               renderItem={function ({ item }) {
                 return (
-                  <PostCard
-                    author={getName(item.userId)}
-                    title={item.title}
-                    body={item.body}
-                  />
+                  <View>
+                    <Card>
+                      <PostCard
+                        author={getName(item.userId)}
+                        title={item.title}
+                        body={item.body}
+                      />
+                      <Card.Divider />
+                      <LikeCommentButton />
+                    </Card>
+                  </View>
                 );
               }}
             />
           </View>
-        )}
+        )
+        }
       </AuthContext.Consumer>
     );
   } else {
