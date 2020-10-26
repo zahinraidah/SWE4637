@@ -3,14 +3,18 @@ import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react
 import { Card, Button, Input } from "react-native-elements";
 import PostCard from "./../components/PostCard";
 import { AntDesign, Entypo } from "@expo/vector-icons";
+
 import { AuthContext } from "../providers/AuthProvider";
+
 import { getPosts } from "./../requests/Posts";
 import { getUsers } from "./../requests/Users";
 import { getComments } from "../requests/Comments";
+
 import HeaderTop from "./../components/HeaderTop";
 import InputCard from "../components/InputCard";
 
 const PostScreen = (props) => {
+    const postID = props.route.params.postId
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -33,7 +37,7 @@ const PostScreen = (props) => {
     };
 
     const loadComments = async () => {
-        const response = await getComments();
+        const response = await getComments(postID);
         if (response.ok) {
             setComments(response.data);
         }
@@ -49,7 +53,7 @@ const PostScreen = (props) => {
     };
 
     useEffect(() => {
-        //loadPosts();
+        loadPosts();
         loadUsers();
         loadComments();
     }, []);
@@ -71,11 +75,10 @@ const PostScreen = (props) => {
                                     <View>
                                         <Card>
                                             <PostCard
-                                                author={getName(item.postId)}
-                                                //title={item.title}
+                                                author={getName(item.id)}
+                                                title={item.name}
                                                 body={item.body}
                                             />
-                                            {/* <Card.Divider/> */}
                                         </Card>
                                     </View>
                                 );

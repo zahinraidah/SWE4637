@@ -43,12 +43,11 @@ const ProfileScreen = (props) => {
             style={{ height: 8, width: 150, alignSelf: "center", marginTop: 10, marginBottom: 28 }}
           >
             <Button type="solid" title="Delete Profile"
-              onPress={ function () {
-                let data = getDataJSON(auth.CurrentUser.email)
-                removeData(data)
-                auth.setIsLoggedIn(false);
-                auth.setCurrentUser({});
-              }} />
+              onPress={() => {
+                console.log("Pressed");
+                confirm("Are You Sure?");
+              }}
+            />
           </TouchableOpacity>
           <Card>
             <View>

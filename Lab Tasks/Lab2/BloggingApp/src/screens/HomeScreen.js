@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { Card, Text } from "react-native-elements";
+import { useNetInfo } from "@react-native-community/netinfo"
 
 import { AuthContext } from "../providers/AuthProvider";
 import { getPosts } from "./../requests/Posts";
@@ -10,8 +11,14 @@ import PostCard from "./../components/PostCard";
 import HeaderTop from "./../components/HeaderTop";
 import InputCard from "../components/InputCard";
 import LikeCommentButton from "../components/LikeCommentButton";
+import Loading from "../components/Loading";
 
 const HomeScreen = (props) => {
+  const netinfo = useNetInfo();
+  if (netinfo.type != "unknown" && !netinfo.isInternetReachable) {
+    alert("No Internet!");
+  }
+
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -71,7 +78,8 @@ const HomeScreen = (props) => {
                         body={item.body}
                       />
                       <Card.Divider />
-                      <LikeCommentButton />
+                      <LikeCommentButton 
+                      postId = {item.postId}/>
                     </Card>
                   </View>
                 );
@@ -85,7 +93,7 @@ const HomeScreen = (props) => {
   } else {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <ActivityIndicator size="large" color="red" animating={true} />
+        <Loading/>
       </View>
     );
   }
