@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
-import { Card, Text } from "react-native-elements";
+import { View, StyleSheet, FlatList } from "react-native";
+import { Card } from "react-native-elements";
 import { useNetInfo } from "@react-native-community/netinfo"
+import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
 import { getPosts } from "./../requests/Posts";
@@ -20,8 +21,11 @@ const HomeScreen = (props) => {
   }
 
   const [posts, setPosts] = useState([]);
+  const [userID, setUserID] = useState([]);
+  const [postID, setPostID] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState([]);
 
   const loadPosts = async () => {
     setLoading(true);
@@ -64,6 +68,17 @@ const HomeScreen = (props) => {
             <Card>
               <InputCard
                 Text="What's On Your Mind?"
+                textFunction={(currentInput) => {
+                  setInput(currentInput);
+                }}
+                pressfFunction={() => {
+                  let currentPost = {
+                    userID: setUserID(auth.CurrentUser.userId),
+                    postID: setPostID(auth.CurrentUser.postId),
+                    post: input,
+                  };
+                  storeDataJSON(userID, currentPost);
+                }}
               />
             </Card>
             <FlatList
@@ -78,8 +93,8 @@ const HomeScreen = (props) => {
                         body={item.body}
                       />
                       <Card.Divider />
-                      <LikeCommentButton 
-                      postId = {item.postId}/>
+                      <LikeCommentButton
+                        postId={item.postId} />
                     </Card>
                   </View>
                 );
@@ -93,7 +108,7 @@ const HomeScreen = (props) => {
   } else {
     return (
       <View style={{ flex: 1, justifyContent: "center" }}>
-        <Loading/>
+        <Loading />
       </View>
     );
   }

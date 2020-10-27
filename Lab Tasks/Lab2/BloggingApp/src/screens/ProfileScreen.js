@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, StyleSheet, AsyncStorage, TouchableOpacity } from "react-native";
-import { Text, Card, Button, Avatar, Header, Image } from "react-native-elements";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, Card, Button, Header, Image } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import { removeData } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";

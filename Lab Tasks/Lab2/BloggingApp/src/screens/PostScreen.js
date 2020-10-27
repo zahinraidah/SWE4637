@@ -15,6 +15,7 @@ import InputCard from "../components/InputCard";
 
 const PostScreen = (props) => {
     const postID = props.route.params.postId
+    console.log (postID);
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);

@@ -45,7 +45,7 @@ const SignUpScreen = (props) => {
             setPassword(currentInput);
           }}
         />
-
+        
         <Button
           icon={<AntDesign name="user" size={24} color="white" />}
           title="  Sign Up!"
