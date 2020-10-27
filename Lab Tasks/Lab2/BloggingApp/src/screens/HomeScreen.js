@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList } from "react-native";
 import { Card } from "react-native-elements";
 import { useNetInfo } from "@react-native-community/netinfo"
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { getDataJSON } from "../functions/AsyncStorageFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
 import { getPosts } from "./../requests/Posts";
@@ -71,13 +72,15 @@ const HomeScreen = (props) => {
                 textFunction={(currentInput) => {
                   setInput(currentInput);
                 }}
-                pressfFunction={() => {
+                pressfFunction={async () => {
                   let currentPost = {
-                    userID: setUserID(auth.CurrentUser.userId),
-                    postID: setPostID(auth.CurrentUser.postId),
+                    userID: setUserID(auth.CurrentUser.name),
+                    //postID: setPostID(auth.currentPost),
                     post: input,
                   };
                   storeDataJSON(userID, currentPost);
+                  let UserData = await getDataJSON(userID);
+                  console.log(UserData);
                 }}
               />
             </Card>
