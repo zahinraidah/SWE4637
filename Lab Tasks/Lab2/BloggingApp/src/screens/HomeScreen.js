@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { Card } from "react-native-elements";
-import { useNetInfo } from "@react-native-community/netinfo"
+import { useNetInfo } from "@react-native-community/netinfo";
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
 
@@ -22,8 +22,7 @@ const HomeScreen = (props) => {
   }
 
   const [posts, setPosts] = useState([]);
-  const [userID, setUserID] = useState([]);
-  const [postID, setPostID] = useState([]);
+  const [postID, setpostID] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState([]);
@@ -69,17 +68,21 @@ const HomeScreen = (props) => {
             <Card>
               <InputCard
                 Text="What's On Your Mind?"
-                textFunction={(currentInput) => {
-                  setInput(currentInput);
-                }}
-                pressfFunction={async () => {
+                currentFunc={setInput}
+                currentText={input}
+                pressFunction={async () => {
                   let currentPost = {
-                    userID: setUserID(auth.CurrentUser.name),
-                    //postID: setPostID(auth.currentPost),
-                    post: input,
+                    userId: auth.CurrentUser.name,
+                    Id: Math.random().toString(36).substring(7),
+                    title: " ",
+                    body: input,
                   };
-                  storeDataJSON(userID, currentPost);
-                  let UserData = await getDataJSON(userID);
+                  setpostID(currentPost.Id);
+                  storeDataJSON(
+                    JSON.stringify(postID),
+                    JSON.stringify(currentPost)
+                  );
+                  let UserData = await getDataJSON(JSON.stringify(postID));
                   console.log(UserData);
                 }}
               />
@@ -97,15 +100,20 @@ const HomeScreen = (props) => {
                       />
                       <Card.Divider />
                       <LikeCommentButton
-                        postId={item.postId} />
+                        postId={item.postId}
+                        navigateFunc={() => {
+                          props.navigation.navigate("PostScreen", {
+                            postId: item.id,
+                          });
+                        }}
+                      />
                     </Card>
                   </View>
                 );
               }}
             />
           </View>
-        )
-        }
+        )}
       </AuthContext.Consumer>
     );
   } else {

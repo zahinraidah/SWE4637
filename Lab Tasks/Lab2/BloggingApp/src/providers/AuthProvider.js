@@ -5,6 +5,7 @@ const AuthContext = React.createContext();
 const AuthProvider = (props) => {
   const [CurrentUser, setCurrentUser] = useState({});
   const [IsLoggedIn, setIsLoggedIn] = useState(false);
+  const [CurrentComment, setCurrentComment] = useState({});
   const [CurrentPost, setCurrentPost] = useState({});
 
   return (
@@ -16,6 +17,8 @@ const AuthProvider = (props) => {
         setIsLoggedIn: setIsLoggedIn,
         CurrentPost: CurrentPost,
         setCurrentPost: setCurrentPost,
+        CurrentComment: CurrentComment,
+        setCurrentComment: setCurrentComment,
       }}
     >
       {props.children}

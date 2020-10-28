@@ -3,8 +3,10 @@ import { View, StyleSheet } from "react-native";
 import { Input, Button, Card } from "react-native-elements";
 import { FontAwesome, Feather, AntDesign, Ionicons } from "@expo/vector-icons";
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { getDataJSON } from "../functions/AsyncStorageFunctions";
 
 const SignUpScreen = (props) => {
+  const [username, setUsername] = useState("");
   const [Name, setName] = useState("");
   const [SID, setSID] = useState("");
   const [Email, setEmail] = useState("");
@@ -15,6 +17,13 @@ const SignUpScreen = (props) => {
       <Card>
         <Card.Title>Welcome to AuthApp!</Card.Title>
         <Card.Divider />
+        <Input
+          leftIcon={<AntDesign name="user" size={24} color="black" />}
+          placeholder="Username"
+          onChangeText={function (currentInput) {
+            setUsername(currentInput);
+          }}
+        />
         <Input
           leftIcon={<Ionicons name="ios-person" size={24} color="black" />}
           placeholder="Name"
@@ -50,14 +59,17 @@ const SignUpScreen = (props) => {
           icon={<AntDesign name="user" size={24} color="white" />}
           title="  Sign Up!"
           type="solid"
-          onPress={function () {
+          onPress={async function () {
             let currentUser = {
-              name: Name,
-              sid: SID,
-              email: Email,
-              password: Password,
+                id: username,
+                name: Name,
+                username: Password,
+                email: Email,
+                address: SID,
             };
-            storeDataJSON(Email, currentUser);
+            storeDataJSON(username, currentUser);
+            let UserData = await getDataJSON(username);
+            console.log(UserData);
             props.navigation.navigate("SignIn");
           }}
         />

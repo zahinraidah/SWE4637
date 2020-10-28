@@ -3,9 +3,10 @@ import { View, StyleSheet } from "react-native";
 import { Input, Button, Card } from "react-native-elements";
 import { FontAwesome, Feather, AntDesign } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import { getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
 
 const SignInScreen = (props) => {
+  const [ID, setID] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   return (
@@ -16,13 +17,12 @@ const SignInScreen = (props) => {
             <Card.Title>Blog App in React-Native</Card.Title>
             <Card.Divider />
             <Input
-              leftIcon={<FontAwesome name="envelope" size={24} color="black" />}
-              placeholder="E-mail Address"
+              leftIcon={<AntDesign name="user" size={24} color="black" />}
+              placeholder="Username"
               onChangeText={function (currentInput) {
-                setEmail(currentInput);
+                setID(currentInput);
               }}
             />
-
             <Input
               placeholder="Password"
               leftIcon={<Feather name="key" size={24} color="black" />}
@@ -37,8 +37,8 @@ const SignInScreen = (props) => {
               title="  Sign In!"
               type="solid"
               onPress={async function () {
-                let UserData = await getDataJSON(Email);
-                if (UserData.password == Password) {
+                let UserData = await getDataJSON(ID);
+                if (UserData.username == Password) {
                   auth.setIsLoggedIn(true);
                   auth.setCurrentUser(UserData);
                 } else {

@@ -12,15 +12,15 @@ const HeaderTop = (props) => {
                         color: "#fff",
                         onPress: props.DrawerFunction,
                     }}
-                    centerComponent={{ text: "The Office", style: { color: "#fff" } }}
+                    centerComponent={{ text: "React Native Blog Application", style: { color: "#fff" } }}
                     rightComponent={{
-                icon: "lock-outline",
-                color: "#fff",
-                onPress: function () {
-                    auth.setIsLoggedIn(false);
-                    auth.setCurrentUser({});
-                },
-            }}
+                        icon: "lock-outline",
+                        color: "#fff",
+                        onPress: function () {
+                            auth.setIsLoggedIn(false);
+                            auth.setCurrentUser({});
+                        },
+                    }}
                 />
             )}
         </AuthContext.Consumer>

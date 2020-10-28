@@ -2,36 +2,25 @@ import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Text, Card, Button, Header, Image } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
+import { AntDesign } from '@expo/vector-icons';
 import { removeData } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import HeaderTop from "../components/HeaderTop";
 
 const ProfileScreen = (props) => {
   return (
     <AuthContext.Consumer>
       {(auth) => (
         <View style={styles.viewStyle}>
-          <Header
-            leftComponent={{
-              icon: "menu",
-              color: "#fff",
-              onPress: function () {
-                props.navigation.toggleDrawer();
-              },
-            }}
-            centerComponent={{ text: "BloggerLife", style: { color: "#fff" } }}
-            rightComponent={{
-              icon: "lock-outline",
-              color: "#fff",
-              onPress: function () {
-                auth.setIsLoggedIn(false);
-                auth.setCurrentUser({});
-              },
+          <HeaderTop
+            DrawerFunction={() => {
+              props.navigation.toggleDrawer();
             }}
           />
           <Card>
             <View style={{ alignItems: "center" }}>
               <Image
-                source={require('../../assets/profile.jpg')}
+                source={require("../../assets/profile.jpg")}
                 style={styles.imageStyle}
               />
               <Text style={{ fontSize: 32 }}>
@@ -40,12 +29,18 @@ const ProfileScreen = (props) => {
             </View>
           </Card>
           <TouchableOpacity
-            style={{ height: 8, width: 150, alignSelf: "center", marginTop: 10, marginBottom: 28 }}
+            style={{ height: 8, width: 150, alignSelf: "center", margin: 10, marginBottom: 28 }}
           >
-            <Button type="solid" title="Delete Profile"
-              onPress={() => {
+            <Button
+              type="solid"
+              title=" Delete Profile"
+              icon={<AntDesign name="deleteuser" size={24} color="white" />}
+              onPress={async () => {
                 console.log("Pressed");
-                confirm("Are You Sure?");
+                console.log(auth.CurrentUser.id);
+                removeData(auth.CurrentUser.id);
+                auth.setIsLoggedIn(false);
+                auth.setCurrentUser({});
               }}
             />
           </TouchableOpacity>
