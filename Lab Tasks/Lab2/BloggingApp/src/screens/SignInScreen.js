@@ -38,7 +38,7 @@ const SignInScreen = (props) => {
               type="solid"
               onPress={async function () {
                 let UserData = await getDataJSON(ID);
-                if (UserData.username == Password) {
+                if (UserData.password == Password) {
                   auth.setIsLoggedIn(true);
                   auth.setCurrentUser(UserData);
                 } else {

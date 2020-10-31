@@ -63,9 +63,9 @@ const SignUpScreen = (props) => {
             let currentUser = {
                 id: username,
                 name: Name,
-                username: Password,
+                password: Password,
                 email: Email,
-                address: SID,
+                SID: SID,
             };
             storeDataJSON(username, currentUser);
             let UserData = await getDataJSON(username);

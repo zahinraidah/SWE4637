@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import { Card } from "react-native-elements";
 import { useNetInfo } from "@react-native-community/netinfo";
+
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
 
@@ -71,13 +72,13 @@ const HomeScreen = (props) => {
                 currentFunc={setInput}
                 currentText={input}
                 pressFunction={async () => {
+                  setpostID([auth.CurrentUser.id + "-post-" + Math.random().toString(36).substring(7)]);
                   let currentPost = {
-                    userId: auth.CurrentUser.name,
-                    Id: Math.random().toString(36).substring(7),
-                    title: " ",
+                    userId: auth.CurrentUser.id,
+                    Id: postID,
                     body: input,
                   };
-                  setpostID(currentPost.Id);
+                  //setpostID(currentPost.Id);
                   storeDataJSON(
                     JSON.stringify(postID),
                     JSON.stringify(currentPost)

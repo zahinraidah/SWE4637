@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-} from "react-native";
-import { Card, Button, Input } from "react-native-elements";
+import { View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { Card } from "react-native-elements";
 import PostCard from "./../components/PostCard";
-import { AntDesign, Entypo } from "@expo/vector-icons";
 
 import { AuthContext } from "../providers/AuthProvider";
+
+import { storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { getDataJSON } from "../functions/AsyncStorageFunctions";
 
 import { getPosts } from "./../requests/Posts";
 import { getUsers } from "./../requests/Users";
@@ -21,6 +17,7 @@ import InputCard from "../components/InputCard";
 
 const PostScreen = (props) => {
   const postID = props.route.params.postId;
+  const [commentID, setCommentID] = useState([]);
   const [posts, setPosts] = useState([]);
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -101,18 +98,18 @@ const PostScreen = (props) => {
                 currentFunc={setInput}
                 currentText={input}
                 pressFunction={async () => {
+                  setCommentID([auth.CurrentUser.id + "-comment-" + Math.random().toString(36).substring(7)])
                   let currentComment = {
                     postId: postID,
-                    id: Math.random().toString(36).substring(7),
+                    id: commentID,
                     name: auth.CurrentUser.name,
-                    email: "",//auth.CurrentUser.email,
                     body: input,
                   };
                   storeDataJSON(
-                    JSON.stringify(postID),
+                    JSON.stringify(commentID),
                     JSON.stringify(currentComment)
                   );
-                  let UserData = await getDataJSON(JSON.stringify(postID));
+                  let UserData = await getDataJSON(JSON.stringify(commentID));
                   console.log(UserData);
                 }} />
             </Card>

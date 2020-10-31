@@ -1,10 +1,11 @@
-import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { Text, Card, Button, Header, Image } from "react-native-elements";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { Text, Card, Button, Image } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import { AntDesign } from '@expo/vector-icons';
-import { removeData } from "../functions/AsyncStorageFunctions";
+import { clearAllData, getSpecificData, storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import { getAllData } from "../functions/AsyncStorageFunctions";
 import HeaderTop from "../components/HeaderTop";
 
 const ProfileScreen = (props) => {
@@ -19,10 +20,7 @@ const ProfileScreen = (props) => {
           />
           <Card>
             <View style={{ alignItems: "center" }}>
-              <Image
-                source={require("../../assets/profile.jpg")}
-                style={styles.imageStyle}
-              />
+              <Image source={require("../../assets/profile.jpg")} style={styles.imageStyle} />
               <Text style={{ fontSize: 32 }}>
                 {auth.CurrentUser.name}
               </Text>
@@ -36,11 +34,19 @@ const ProfileScreen = (props) => {
               title=" Delete Profile"
               icon={<AntDesign name="deleteuser" size={24} color="white" />}
               onPress={async () => {
-                console.log("Pressed");
-                console.log(auth.CurrentUser.id);
-                removeData(auth.CurrentUser.id);
+                console.log("pressed");
+                
+                let data = await getSpecificData("post");
+                console.log(data)
+                data.forEach(async (item) =>{
+                  let dataset = await getDataJSON(JSON.stringify(item));
+                  console.log(dataset);
+                })
+                //clearAllData();
+
+                {/*removeData(auth.CurrentUser.id);
                 auth.setIsLoggedIn(false);
-                auth.setCurrentUser({});
+                auth.setCurrentUser({});*/}
               }}
             />
           </TouchableOpacity>
@@ -70,9 +76,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageStyle: {
-    height: 260,
-    width: 260,
-    alignSelf: 'center',
+    height: 200,
+    width: 200,
+    margin: 5,
   },
 });
 
