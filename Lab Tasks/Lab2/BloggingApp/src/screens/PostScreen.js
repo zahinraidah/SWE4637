@@ -7,6 +7,7 @@ import { AuthContext } from "../providers/AuthProvider";
 
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import { getAllComments } from "../functions/PostFunctions";
 
 import { getPosts } from "./../requests/Posts";
 import { getUsers } from "./../requests/Users";
@@ -24,28 +25,20 @@ const PostScreen = (props) => {
   const [comments, setComments] = useState([]);
   const [input, setInput] = useState([]);
 
-  const loadPosts = async () => {
-    setLoading(true);
-    const response = await getPosts();
-    if (response.ok) {
-      setPosts(response.data);
+  const loadIndividualPost = async () => {
+    setLoading();
+    let response = await getDataJSON(JSON.stringify(postID));
+    if (response != null) {
+      setPosts(response);
     }
-  };
-
-  const loadUsers = async () => {
-    const response = await getUsers();
-    if (response.ok) {
-      setUsers(response.data);
-    }
-    setLoading(false);
   };
 
   const loadComments = async () => {
-    const response = await getComments(postID);
-    if (response.ok) {
-      setComments(response.data);
+    setLoading(true);
+    let response = await getAllComments();
+    if (response != null) {
+      setComments(response);
     }
-    setLoading(false);
   };
 
   const getName = (id) => {
@@ -57,8 +50,7 @@ const PostScreen = (props) => {
   };
 
   useEffect(() => {
-    //loadPosts();
-    loadUsers();
+    loadIndividualPost();
     loadComments();
   }, []);
 
@@ -72,26 +64,32 @@ const PostScreen = (props) => {
                 props.navigation.toggleDrawer();
               }}
             />
-            {/* <PostCard
-            author={getName(auth.CurrentPost.postID)}
-            title={auth.CurrentPost.userID}
-            body={item.body}
-            /> */}
+            <Card>
+              <PostCard
+                author={posts.userId}
+                title={posts.Id}
+                body={posts.body}
+              />
+            </Card>
             <FlatList
               data={comments}
               renderItem={function ({ item }) {
-                return (
-                  <View>
-                    <Card>
-                      <PostCard
-                        author={getName(item.id)}
-                        title={item.name}
-                        body={item.body}
-                      />
-                    </Card>
-                  </View>
-                );
+                let data = JSON.parse(item);
+                if (data.postId == postID) {
+                  return (
+                    <View>
+                      <Card>
+                        <PostCard
+                          author={data.id}
+                          title={data.name}
+                          body={data.body}
+                        />
+                      </Card>
+                    </View>
+                  );
+                }
               }}
+              keyExtractor={(data) => { data.toString() }}
             />
             <Card>
               <InputCard Text="Post a Comment"

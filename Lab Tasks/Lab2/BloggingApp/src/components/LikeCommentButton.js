@@ -6,7 +6,7 @@ import { AuthContext } from "../providers/AuthProvider";
 
 const LikeCommentButton = (props) => {
   const [count, setCount] = useState(0);
-  const [icon, setIcon] = useState(["like2"]);
+  const [icon, setIcon] = useState("like2");
   return (
     <AuthContext.Consumer>
       {(auth) => (
@@ -16,7 +16,7 @@ const LikeCommentButton = (props) => {
             title={`Like (${count})`}
             icon={<AntDesign name={icon} size={24} color="dodgerblue" />}
             onPress={function () {
-              if (icon== "like2") {
+              if (icon == "like2") {
                 setCount(count + 1);
                 setIcon("like1")
               }

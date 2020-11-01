@@ -5,6 +5,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import {getAllPosts} from "../functions/PostFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
 import { getPosts } from "./../requests/Posts";
@@ -16,7 +17,10 @@ import InputCard from "../components/InputCard";
 import LikeCommentButton from "../components/LikeCommentButton";
 import Loading from "../components/Loading";
 
+import PostScreen from "../screens/PostScreen"; 
+
 const HomeScreen = (props) => {
+
   const netinfo = useNetInfo();
   if (netinfo.type != "unknown" && !netinfo.isInternetReachable) {
     alert("No Internet!");
@@ -30,9 +34,9 @@ const HomeScreen = (props) => {
 
   const loadPosts = async () => {
     setLoading(true);
-    const response = await getPosts();
-    if (response.ok) {
-      setPosts(response.data);
+    let response = await getAllPosts();
+    if (response!=null) {
+      setPosts(response);
     }
   };
 
@@ -78,11 +82,11 @@ const HomeScreen = (props) => {
                     Id: postID,
                     body: input,
                   };
-                  //setpostID(currentPost.Id);
                   storeDataJSON(
                     JSON.stringify(postID),
                     JSON.stringify(currentPost)
                   );
+                  
                   let UserData = await getDataJSON(JSON.stringify(postID));
                   console.log(UserData);
                 }}
@@ -91,20 +95,20 @@ const HomeScreen = (props) => {
             <FlatList
               data={posts}
               renderItem={function ({ item }) {
+                let data = JSON.parse(item)
                 return (
                   <View>
                     <Card>
                       <PostCard
-                        author={getName(item.userId)}
-                        title={item.title}
-                        body={item.body}
+                        author={data.userId}
+                        title={data.Id}
+                        body={data.body}
                       />
                       <Card.Divider />
                       <LikeCommentButton
-                        postId={item.postId}
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", {
-                            postId: item.id,
+                            postId: data.Id,
                           });
                         }}
                       />
@@ -112,6 +116,7 @@ const HomeScreen = (props) => {
                   </View>
                 );
               }}
+              keyExtractor={(item) => {item.toString()}}
             />
           </View>
         )}

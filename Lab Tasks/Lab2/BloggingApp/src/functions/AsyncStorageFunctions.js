@@ -1,5 +1,6 @@
 import { AsyncStorage } from "react-native";
 
+
 const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
@@ -51,14 +52,14 @@ const getSpecificData = async (string) => {
   let keys = []
   try {
     data = await AsyncStorage.getAllKeys();
-    data.forEach((i) => {
+    for (let i of data) {
       if (i.includes(string)) {
         i = i.replace(/"/g,"")
         i = i.replace(/\[/g,"")
         i = i.replace(/\]/g,"")
         keys.push(i)
       }
-    });
+    };
     if (keys != null) {
       return keys;
     } else {

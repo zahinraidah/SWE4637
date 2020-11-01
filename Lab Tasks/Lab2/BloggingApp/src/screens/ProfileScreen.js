@@ -3,10 +3,11 @@ import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
 import { Text, Card, Button, Image } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import { AntDesign } from '@expo/vector-icons';
-import { clearAllData, getSpecificData, storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { clearAllData, getData, getSpecificData, removeData, storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
 import { getAllData } from "../functions/AsyncStorageFunctions";
 import HeaderTop from "../components/HeaderTop";
+import { getAllComments } from "../functions/PostFunctions";
 
 const ProfileScreen = (props) => {
   return (
@@ -26,30 +27,21 @@ const ProfileScreen = (props) => {
               </Text>
             </View>
           </Card>
-          <TouchableOpacity
-            style={{ height: 8, width: 150, alignSelf: "center", margin: 10, marginBottom: 28 }}
-          >
             <Button
-              type="solid"
-              title=" Delete Profile"
+              buttonStyle={{ backgroundColor: '#e02f2f' }}
+              containerStyle={{ width: 150, marginLeft: 120, marginRight: 10, marginTop: 15 }}
+              titleStyle={{ marginLeft: 5 }}
+              title="Delete User"
+              type='solid'
+              alignSelf='center'
               icon={<AntDesign name="deleteuser" size={24} color="white" />}
               onPress={async () => {
-                console.log("pressed");
-                
-                let data = await getSpecificData("post");
-                console.log(data)
-                data.forEach(async (item) =>{
-                  let dataset = await getDataJSON(JSON.stringify(item));
-                  console.log(dataset);
-                })
                 //clearAllData();
-
                 {/*removeData(auth.CurrentUser.id);
                 auth.setIsLoggedIn(false);
                 auth.setCurrentUser({});*/}
               }}
             />
-          </TouchableOpacity>
           <Card>
             <View>
               <Text style={{ alignSelf: "center", fontSize: 18 }}>
