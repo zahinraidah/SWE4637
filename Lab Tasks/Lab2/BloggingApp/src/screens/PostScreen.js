@@ -26,11 +26,15 @@ const PostScreen = (props) => {
   const [input, setInput] = useState([]);
 
   const loadIndividualPost = async () => {
-    setLoading();
+    setLoading(true);
     let response = await getDataJSON(JSON.stringify(postID));
     if (response != null) {
       setPosts(response);
+      setPosts(response);
+      console.log(posts);
     }
+    setLoading(false);
+
   };
 
   const loadComments = async () => {
