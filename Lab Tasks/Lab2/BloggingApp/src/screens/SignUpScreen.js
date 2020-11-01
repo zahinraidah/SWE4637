@@ -61,7 +61,7 @@ const SignUpScreen = (props) => {
           type="solid"
           onPress={async function () {
             let currentUser = {
-                id: username,
+                username: username,
                 name: Name,
                 password: Password,
                 email: Email,

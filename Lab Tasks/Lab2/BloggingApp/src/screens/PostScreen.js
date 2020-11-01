@@ -9,39 +9,28 @@ import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
 import { getAllComments } from "../functions/PostFunctions";
 
-import { getPosts } from "./../requests/Posts";
-import { getUsers } from "./../requests/Users";
-import { getComments } from "../requests/Comments";
-
 import HeaderTop from "./../components/HeaderTop";
 import InputCard from "../components/InputCard";
 
 const PostScreen = (props) => {
   const postID = props.route.params.postId;
   const [commentID, setCommentID] = useState([]);
-  const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
   const [input, setInput] = useState([]);
 
   const loadIndividualPost = async () => {
-    setLoading(true);
     let response = await getDataJSON(JSON.stringify(postID));
     if (response != null) {
-      setPosts(response);
-      setPosts(response);
-      console.log(posts);
+      return response;
     }
-    setLoading(false);
-
   };
 
   const loadComments = async () => {
-    setLoading(true);
     let response = await getAllComments();
     if (response != null) {
-      setComments(response);
+      return response;
     }
   };
 
@@ -54,8 +43,12 @@ const PostScreen = (props) => {
   };
 
   useEffect(() => {
-    loadIndividualPost();
-    loadComments();
+    loadIndividualPost().then((response) => {
+      setPosts(JSON.parse(response));
+    });
+    loadComments().then((response) => {
+      setComments(response);
+    });
   }, []);
 
   if (!loading) {
@@ -68,44 +61,55 @@ const PostScreen = (props) => {
                 props.navigation.toggleDrawer();
               }}
             />
+
             <Card>
               <PostCard
-                author={posts.userId}
-                title={posts.Id}
-                body={posts.body}
+                author={posts.name}
+                body={posts.post}
               />
             </Card>
+            
             <FlatList
               data={comments}
+              onRefresh={loadComments}
+              refreshing={loading}
               renderItem={function ({ item }) {
                 let data = JSON.parse(item);
-                if (data.postId == postID) {
+                if(JSON.stringify(data.post) === JSON.stringify(postID)){
                   return (
                     <View>
                       <Card>
                         <PostCard
-                          author={data.id}
-                          title={data.name}
-                          body={data.body}
+                          author={data.commenter}
+                          body={data.comment}
                         />
                       </Card>
                     </View>
-                  );
+                  );}
                 }
+              }
+              keyExtractor={(item) => {
+                item.toString();
               }}
-              keyExtractor={(data) => { data.toString() }}
             />
+            
             <Card>
-              <InputCard Text="Post a Comment"
+              <InputCard
+                Text="Post a Comment"
                 currentFunc={setInput}
                 currentText={input}
                 pressFunction={async () => {
-                  setCommentID([auth.CurrentUser.id + "-comment-" + Math.random().toString(36).substring(7)])
+                  setCommentID([
+                    auth.CurrentUser.id +
+                      "-comment-" +
+                      Math.random().toString(36).substring(7),
+                  ]);
                   let currentComment = {
-                    postId: postID,
-                    id: commentID,
-                    name: auth.CurrentUser.name,
-                    body: input,
+                    post: postID,
+                    commentId: commentID,
+                    commneterID: auth.CurrentUser.username,
+                    commenter: auth.CurrentUser.name,
+                    comment: input,
                   };
                   storeDataJSON(
                     JSON.stringify(commentID),
@@ -113,7 +117,8 @@ const PostScreen = (props) => {
                   );
                   let UserData = await getDataJSON(JSON.stringify(commentID));
                   console.log(UserData);
-                }} />
+                }}
+              />
             </Card>
           </View>
         )}

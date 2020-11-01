@@ -1,15 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, TouchableOpacity, FlatList } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { Text, Card, Button, Image } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import { AntDesign } from '@expo/vector-icons';
-import { clearAllData, getData, getSpecificData, removeData, storeDataJSON } from "../functions/AsyncStorageFunctions";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
-import { getAllData } from "../functions/AsyncStorageFunctions";
+import { clearAllData } from "../functions/AsyncStorageFunctions";
 import HeaderTop from "../components/HeaderTop";
-import { getAllComments } from "../functions/PostFunctions";
+import { getAllPosts } from "../functions/PostFunctions";
+import PostCard from "./../components/PostCard";
+import LikeCommentButton from "../components/LikeCommentButton";
+
 
 const ProfileScreen = (props) => {
+  const [posts, setPosts] = useState([]);
+
+  const loadPosts = async () => {
+    let response = await getAllPosts();
+    if (response != null) {
+      setPosts(response);
+    }
+  };
+
+  useEffect(() => {
+    loadPosts();
+  }, []);
+
   return (
     <AuthContext.Consumer>
       {(auth) => (
@@ -27,21 +41,21 @@ const ProfileScreen = (props) => {
               </Text>
             </View>
           </Card>
-            <Button
-              buttonStyle={{ backgroundColor: '#e02f2f' }}
-              containerStyle={{ width: 150, marginLeft: 120, marginRight: 10, marginTop: 15 }}
-              titleStyle={{ marginLeft: 5 }}
-              title="Delete User"
-              type='solid'
-              alignSelf='center'
-              icon={<AntDesign name="deleteuser" size={24} color="white" />}
-              onPress={async () => {
-                //clearAllData();
-                {/*removeData(auth.CurrentUser.id);
-                auth.setIsLoggedIn(false);
-                auth.setCurrentUser({});*/}
-              }}
-            />
+          <Button
+            buttonStyle={{ backgroundColor: '#e02f2f' }}
+            containerStyle={{ width: 150, marginLeft: 120, marginRight: 10, marginTop: 15 }}
+            titleStyle={{ marginLeft: 5 }}
+            title="Delete User"
+            type='solid'
+            alignSelf='center'
+            icon={<AntDesign name="deleteuser" size={24} color="white" />}
+            onPress={async () => {
+              //clearAllData();
+              removeData(auth.CurrentUser.username);
+              auth.setIsLoggedIn(false);
+              auth.setCurrentUser({});
+            }}
+          />
           <Card>
             <View>
               <Text style={{ alignSelf: "center", fontSize: 18 }}>
@@ -53,6 +67,33 @@ const ProfileScreen = (props) => {
               </Text>
             </View>
           </Card>
+          <FlatList
+            data={posts}
+            renderItem={function ({ item }) {
+              let data = JSON.parse(item)
+              if (JSON.stringify(data.username) === JSON.stringify(auth.CurrentUser.username)) {
+                return (
+                  <View>
+                    <Card>
+                      <PostCard
+                        author={data.name}
+                        body={data.post}
+                      />
+                      <Card.Divider />
+                      <LikeCommentButton
+                        navigateFunc={() => {
+                          props.navigation.navigate("PostScreen", {
+                            postId: data.Id,
+                          });
+                        }}
+                      />
+                    </Card>
+                  </View>
+                );
+              }
+            }}
+            keyExtractor={(item) => { item.toString() }}
+          />
         </View>
       )}
     </AuthContext.Consumer>

@@ -8,8 +8,6 @@ import { getDataJSON } from "../functions/AsyncStorageFunctions";
 import {getAllPosts} from "../functions/PostFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
-import { getPosts } from "./../requests/Posts";
-import { getUsers } from "./../requests/Users";
 
 import PostCard from "./../components/PostCard";
 import HeaderTop from "./../components/HeaderTop";
@@ -17,7 +15,6 @@ import InputCard from "../components/InputCard";
 import LikeCommentButton from "../components/LikeCommentButton";
 import Loading from "../components/Loading";
 
-import PostScreen from "../screens/PostScreen"; 
 
 const HomeScreen = (props) => {
 
@@ -38,26 +35,11 @@ const HomeScreen = (props) => {
     if (response!=null) {
       setPosts(response);
     }
-  };
-
-  const loadUsers = async () => {
-    const response = await getUsers();
-    if (response.ok) {
-      setUsers(response.data);
-    }
     setLoading(false);
-  };
-  const getName = (id) => {
-    let Name = "";
-    users.forEach((element) => {
-      if (element.id == id) Name = element.name;
-    });
-    return Name;
   };
 
   useEffect(() => {
     loadPosts();
-    loadUsers();
   }, []);
 
   if (!loading) {
@@ -76,11 +58,13 @@ const HomeScreen = (props) => {
                 currentFunc={setInput}
                 currentText={input}
                 pressFunction={async () => {
-                  setpostID([auth.CurrentUser.id + "-post-" + Math.random().toString(36).substring(7)]);
+                  setpostID([auth.CurrentUser.username + "-post-" + Math.random().toString(36).substring(7)]);
                   let currentPost = {
-                    userId: auth.CurrentUser.id,
-                    Id: postID,
-                    body: input,
+                    username: auth.CurrentUser.username,
+                    name: auth.CurrentUser.name,
+                    postID: postID,
+                    post: input,
+                    likes: 0,
                   };
                   storeDataJSON(
                     JSON.stringify(postID),
@@ -94,21 +78,22 @@ const HomeScreen = (props) => {
             </Card>
             <FlatList
               data={posts}
+              onRefresh={loadPosts}
+              refreshing={loading}
               renderItem={function ({ item }) {
                 let data = JSON.parse(item)
                 return (
                   <View>
                     <Card>
                       <PostCard
-                        author={data.userId}
-                        title={data.Id}
-                        body={data.body}
+                        author={data.name}
+                        body={data.post}
                       />
                       <Card.Divider />
                       <LikeCommentButton
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", {
-                            postId: data.Id,
+                            postId: data.postID,
                           });
                         }}
                       />
