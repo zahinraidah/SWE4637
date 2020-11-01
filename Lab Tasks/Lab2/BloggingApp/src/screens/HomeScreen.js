@@ -5,7 +5,7 @@ import { useNetInfo } from "@react-native-community/netinfo";
 
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
-import {getAllPosts} from "../functions/PostFunctions";
+import { getAllPosts } from "../functions/PostFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
 
@@ -32,7 +32,7 @@ const HomeScreen = (props) => {
   const loadPosts = async () => {
     setLoading(true);
     let response = await getAllPosts();
-    if (response!=null) {
+    if (response != null) {
       setPosts(response);
     }
     setLoading(false);
@@ -66,11 +66,12 @@ const HomeScreen = (props) => {
                     post: input,
                     likes: 0,
                   };
+                  auth.setCurrentPost(postID);
                   storeDataJSON(
                     JSON.stringify(postID),
                     JSON.stringify(currentPost)
                   );
-                  
+
                   let UserData = await getDataJSON(JSON.stringify(postID));
                   console.log(UserData);
                 }}
@@ -91,6 +92,8 @@ const HomeScreen = (props) => {
                       />
                       <Card.Divider />
                       <LikeCommentButton
+                        postID={data.postID}
+                        likes = {data.likes}
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", {
                             postId: data.postID,
@@ -101,7 +104,7 @@ const HomeScreen = (props) => {
                   </View>
                 );
               }}
-              keyExtractor={(item) => {item.toString()}}
+              keyExtractor={(item, index) => index.toString()}
             />
           </View>
         )}

@@ -1,47 +1,60 @@
-import React, { useState } from "react";
-import { View, StyleSheet, AsyncStorage } from "react-native";
-import { Text, Card, Button, Avatar, Header } from "react-native-elements";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, AsyncStorage, FlatList, } from "react-native";
+import { Card } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
+import HeaderTop from "../components/HeaderTop";
+import NotificationCard from "../components/NotificationCard";
+import { getAllNotifications } from "../functions/NotificationFunctions";
+import { getAllComments } from "../functions/PostFunctions";
+
 const NotificationScreen = (props) => {
+  const [Notification, setNotification] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const loadNotifications = async () => {
+    setLoading(true);
+    let response = await getAllComments();
+    if (response != null) {
+      setNotification(response);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
   return (
     <AuthContext.Consumer>
       {(auth) => (
         <View style={styles.viewStyle}>
-          <Header
-            leftComponent={{
-              icon: "menu",
-              color: "#fff",
-              onPress: function () {
-                props.navigation.toggleDrawer();
-              },
-            }}
-            centerComponent={{ text: "The Office", style: { color: "#fff" } }}
-            rightComponent={{
-              icon: "lock-outline",
-              color: "#fff",
-              onPress: function () {
-                auth.setIsLoggedIn(false);
-                auth.setCurrentUser({});
-              },
+          <HeaderTop
+            DrawerFunction={() => {
+              props.navigation.toggleDrawer();
             }}
           />
-          <Card>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Avatar
-                containerStyle={{ backgroundColor: "cyan" }}
-                rounded
-                icon={{
-                  name: "thumbs-o-up",
-                  type: "font-awesome",
-                  color: "black",
-                }}
-                activeOpacity={1}
-              />
-              <Text style={{ paddingHorizontal: 10 }}>
-                Pam Beesley Liked Your Post.
-              </Text>
-            </View>
-          </Card>
+          <FlatList
+            data={Notification}
+            onRefresh={loadNotifications}
+            refreshing={loading}
+            renderItem={function ({ item }) {
+              let data = JSON.parse(item)
+              if (data.reciever == auth.CurrentUser.name) {
+                console.log ("in notification screen")
+                console.log(data)
+                return (
+                  <View>
+                    <Card>
+                      <NotificationCard
+                        Text={data.commenter}
+                      />
+                    </Card>
+                  </View>
+                );
+              }
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
         </View>
       )}
     </AuthContext.Consumer>

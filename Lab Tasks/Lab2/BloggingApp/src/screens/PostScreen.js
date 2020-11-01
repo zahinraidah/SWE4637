@@ -88,9 +88,7 @@ const PostScreen = (props) => {
                   );}
                 }
               }
-              keyExtractor={(item) => {
-                item.toString();
-              }}
+              keyExtractor={(item, index) => index.toString()}
             />
             
             <Card>
@@ -106,11 +104,13 @@ const PostScreen = (props) => {
                   ]);
                   let currentComment = {
                     post: postID,
+                    reciever: posts.name,
                     commentId: commentID,
                     commneterID: auth.CurrentUser.username,
                     commenter: auth.CurrentUser.name,
                     comment: input,
                   };
+
                   storeDataJSON(
                     JSON.stringify(commentID),
                     JSON.stringify(currentComment)

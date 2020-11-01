@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList } from "react-native";
 import { Text, Card, Button, Image } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import { AntDesign } from '@expo/vector-icons';
-import { clearAllData } from "../functions/AsyncStorageFunctions";
+import { clearAllData, removeData } from "../functions/AsyncStorageFunctions";
 import HeaderTop from "../components/HeaderTop";
 import { getAllPosts } from "../functions/PostFunctions";
 import PostCard from "./../components/PostCard";
@@ -81,9 +81,11 @@ const ProfileScreen = (props) => {
                       />
                       <Card.Divider />
                       <LikeCommentButton
+                        postID={data.postID}
+                        likes={data.likes}
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", {
-                            postId: data.Id,
+                            postId: data.postID,
                           });
                         }}
                       />
@@ -92,7 +94,7 @@ const ProfileScreen = (props) => {
                 );
               }
             }}
-            keyExtractor={(item) => { item.toString() }}
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
       )}

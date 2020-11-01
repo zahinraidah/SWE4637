@@ -93,6 +93,14 @@ const removeData = async (key) => {
   }
 };
 
+const mergeData = async (key, data) => {
+  try{
+    let data2 = JSON.stringify(data)
+    await AsyncStorage.mergeItem(key, data2)
+  }catch (error){
+    alert (error)
+  }
+}
 const clearAllData = async () => {
   try {
     AsyncStorage.getAllKeys()
@@ -103,4 +111,4 @@ const clearAllData = async () => {
   }
 };
 
-export { storeData, storeDataJSON, getData, getDataJSON, getSpecificData, getAllData, removeData, clearAllData };
+export { storeData, storeDataJSON, getData, getDataJSON, getSpecificData, getAllData, removeData, clearAllData, mergeData };
