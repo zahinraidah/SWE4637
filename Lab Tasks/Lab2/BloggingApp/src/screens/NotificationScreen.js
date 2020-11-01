@@ -13,7 +13,7 @@ const NotificationScreen = (props) => {
 
   const loadNotifications = async () => {
     setLoading(true);
-    let response = await getAllComments();
+    let response = await getAllNotifications();
     if (response != null) {
       setNotification(response);
     }
@@ -40,13 +40,12 @@ const NotificationScreen = (props) => {
             renderItem={function ({ item }) {
               let data = JSON.parse(item)
               if (data.reciever == auth.CurrentUser.name) {
-                console.log ("in notification screen")
-                console.log(data)
                 return (
                   <View>
                     <Card>
                       <NotificationCard
-                        Text={data.commenter}
+                        Text = {data.sender}
+                        Type = {data.type}
                       />
                     </Card>
                   </View>

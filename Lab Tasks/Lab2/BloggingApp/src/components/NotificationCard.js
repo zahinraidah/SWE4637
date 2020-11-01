@@ -3,6 +3,7 @@ import { View, StyleSheet, AsyncStorage } from "react-native";
 import { Text, Card, Button, Avatar, Header } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 const NotificationCard = (props) => {
+  if (props.Type == "comment"){
   return (
     <AuthContext.Consumer>
       {(auth) => (
@@ -12,7 +13,7 @@ const NotificationCard = (props) => {
                 containerStyle={{ backgroundColor: "cyan" }}
                 rounded
                 icon={{
-                  name: "thumbs-o-up",
+                  name: "comment",
                   type: "font-awesome",
                   color: "black",
                 }}
@@ -25,7 +26,32 @@ const NotificationCard = (props) => {
         </View>
       )}
     </AuthContext.Consumer>
-  );
+  );}
+
+  else{
+    return (
+      <AuthContext.Consumer>
+        {(auth) => (
+          <View style={styles.viewStyle}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Avatar
+                  containerStyle={{ backgroundColor: "cyan" }}
+                  rounded
+                  icon={{
+                    name: "thumbs-o-up",
+                    type: "font-awesome",
+                    color: "black",
+                  }}
+                  activeOpacity={1}
+                />
+                <Text style={{ paddingHorizontal: 10 }}>
+                  {props.Text} Liked Your Post.
+                </Text>
+              </View>
+          </View>
+        )}
+      </AuthContext.Consumer>
+    );}
 };
 
 const styles = StyleSheet.create({

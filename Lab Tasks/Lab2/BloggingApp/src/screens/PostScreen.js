@@ -14,6 +14,7 @@ import InputCard from "../components/InputCard";
 
 const PostScreen = (props) => {
   const postID = props.route.params.postId;
+  const [Notification, setNotification] = useState([]);
   const [commentID, setCommentID] = useState([]);
   const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(false);
@@ -28,27 +29,19 @@ const PostScreen = (props) => {
   };
 
   const loadComments = async () => {
+    setLoading(true);
     let response = await getAllComments();
     if (response != null) {
-      return response;
+      setComments(response);
     }
-  };
-
-  const getName = (id) => {
-    let Name = "";
-    users.forEach((element) => {
-      if (element.id == id) Name = element.name;
-    });
-    return Name;
+    setLoading(false);
   };
 
   useEffect(() => {
     loadIndividualPost().then((response) => {
       setPosts(JSON.parse(response));
     });
-    loadComments().then((response) => {
-      setComments(response);
-    });
+    loadComments();
   }, []);
 
   if (!loading) {
@@ -98,7 +91,7 @@ const PostScreen = (props) => {
                 currentText={input}
                 pressFunction={async () => {
                   setCommentID([
-                    auth.CurrentUser.id +
+                    auth.CurrentUser.username+
                       "-comment-" +
                       Math.random().toString(36).substring(7),
                   ]);
@@ -117,6 +110,25 @@ const PostScreen = (props) => {
                   );
                   let UserData = await getDataJSON(JSON.stringify(commentID));
                   console.log(UserData);
+
+                  setNotification([
+                    auth.CurrentUser.username +
+                      "-notification-" +
+                      Math.random().toString(36).substring(7),
+                  ]);
+                  let currentNotification = {
+                    notificationID: Notification,
+                    reciever: posts.name,
+                    sender: auth.CurrentUser.name,
+                    type: "comment"
+                  };
+
+                  storeDataJSON(
+                    JSON.stringify(Notification),
+                    JSON.stringify(currentNotification)
+                  );
+                  let UserData2 = await getDataJSON(JSON.stringify(Notification));
+                  console.log(UserData2);
                 }}
               />
             </Card>

@@ -4,15 +4,17 @@ import { AuthContext } from "../providers/AuthProvider";
 import { getAllComments } from "./PostFunctions";
 
 const getAllNotifications = async () => {
-    let allComment  = await getAllComments();
+    let allComment = await getAllData();
     let Allposts = [];
-        if (allComment != null) {
-            for (let key of allComment) {
-                    let post = await getDataJSON(key);
-                    Allposts.push(post)
+    if (allComment != null) {
+        for (let key of allComment) {
+            if (key.includes('notification')) {
+                let post = await getDataJSON(key);
+                Allposts.push(post)
             }
-            return Allposts;
         }
+        return Allposts;
+    }
 }
 
 const addNotifications = async (data) => {
