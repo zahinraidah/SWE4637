@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, AsyncStorage, FlatList, } from "react-native";
+import { View, StyleSheet, ImageBackground, FlatList, } from "react-native";
 import { Card } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import HeaderTop from "../components/HeaderTop";
@@ -10,6 +10,8 @@ import { getAllComments } from "../functions/PostFunctions";
 const NotificationScreen = (props) => {
   const [Notification, setNotification] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const image = { uri: "https://i.pinimg.com/originals/59/11/cd/5911cda1f1ae980b26ca367af3197dfd.jpg" };
 
   const loadNotifications = async () => {
     setLoading(true);
@@ -28,6 +30,7 @@ const NotificationScreen = (props) => {
     <AuthContext.Consumer>
       {(auth) => (
         <View style={styles.viewStyle}>
+          <ImageBackground source={image} style={styles.image}>
           <HeaderTop
             DrawerFunction={() => {
               props.navigation.toggleDrawer();
@@ -54,6 +57,7 @@ const NotificationScreen = (props) => {
             }}
             keyExtractor={(item, index) => index.toString()}
           />
+          </ImageBackground>
         </View>
       )}
     </AuthContext.Consumer>
@@ -67,6 +71,11 @@ const styles = StyleSheet.create({
   },
   viewStyle: {
     flex: 1,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
   },
 });
 

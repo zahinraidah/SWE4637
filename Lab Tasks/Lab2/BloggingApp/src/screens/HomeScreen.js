@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import { View, StyleSheet, FlatList, ImageBackground } from "react-native";
 import { Card } from "react-native-elements";
 import { useNetInfo } from "@react-native-community/netinfo";
 
-import { removeData, storeDataJSON } from "../functions/AsyncStorageFunctions";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
+import { removeData } from "../functions/AsyncStorageFunctions";
 import { getAllPosts, savePost } from "../functions/PostFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
@@ -28,6 +27,8 @@ const HomeScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState([]);
 
+  const image = { uri: "https://i.pinimg.com/originals/59/11/cd/5911cda1f1ae980b26ca367af3197dfd.jpg" };
+
   const loadPosts = async () => {
     setLoading(true);
     let response = await getAllPosts();
@@ -46,6 +47,7 @@ const HomeScreen = (props) => {
       <AuthContext.Consumer>
         {(auth) => (
           <View style={styles.viewStyle}>
+            <ImageBackground source={image} style={styles.image}>
             <HeaderTop
               DrawerFunction={() => {
                 props.navigation.toggleDrawer();
@@ -75,6 +77,7 @@ const HomeScreen = (props) => {
                 let data = JSON.parse(item)
                 return (
                   <View>
+
                     <Card>
                       <PostCard
                         author={data.name}
@@ -99,6 +102,7 @@ const HomeScreen = (props) => {
               }}
               keyExtractor={(item, index) => index.toString()}
             />
+            </ImageBackground>
           </View>
         )}
       </AuthContext.Consumer>
@@ -119,6 +123,11 @@ const styles = StyleSheet.create({
   },
   viewStyle: {
     flex: 1,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
   },
 });
 
