@@ -1,30 +1,32 @@
-import { AsyncStorage } from "react-native";
-import { getAllData, getDataJSON } from "../functions/AsyncStorageFunctions";
-import { AuthContext } from "../providers/AuthProvider";
-import { getAllComments } from "./PostFunctions";
+import { getAllData, getDataJSON, storeDataJSON } from "../functions/AsyncStorageFunctions";
 
 const getAllNotifications = async () => {
-    let allComment = await getAllData();
-    let Allposts = [];
-    if (allComment != null) {
-        for (let key of allComment) {
+    let allData = await getAllData();
+    let allNotifications = [];
+    if (allNotifications != null) {
+        for (let key of allData) {
             if (key.includes('notification')) {
-                let post = await getDataJSON(key);
-                Allposts.push(post)
+                let notification = await getDataJSON(key);
+                allNotifications.push(notification)
             }
         }
-        return Allposts;
+        return allNotifications;
     }
 }
 
-const addNotifications = async (data) => {
-    try {
-        if (data != null) {
-            data = await storeDataJSON(key);
-        }
+const addNotifications = async (notify, reciever, sender, type) => {
+    let currentNotification = {
+        notifyID: notify,
+        reciever: reciever,
+        sender: sender,
+        type: type
+      };
 
-    } catch (error) {
-        alert(error);
-    }
+      storeDataJSON(
+        JSON.stringify(notify),
+        JSON.stringify(currentNotification)
+      );
+      let UserData2 = await getDataJSON(JSON.stringify(notify));
+      console.log(UserData2);
 }
 export { getAllNotifications, addNotifications };

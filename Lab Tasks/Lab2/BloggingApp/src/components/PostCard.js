@@ -1,9 +1,10 @@
 import React from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Card, Text, Avatar } from "react-native-elements";
 
 const PostCard = (props) => {
   return (
+    <TouchableOpacity onLongPress={props.removeFunc}>
     <View>
       <View
         style={{
@@ -16,6 +17,7 @@ const PostCard = (props) => {
           rounded
           icon={{ name: "user", type: "font-awesome", color: "black" }}
           activeOpacity={1}
+          //onLongPress={}
         />
         <Text h4Style={{ padding: 10 }} h4>
           {props.author}
@@ -29,6 +31,7 @@ const PostCard = (props) => {
         {props.body}
       </Text>
     </View>
+    </TouchableOpacity>
   );
 };
 

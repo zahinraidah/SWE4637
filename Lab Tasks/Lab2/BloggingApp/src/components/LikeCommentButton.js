@@ -3,10 +3,10 @@ import { View } from "react-native";
 import { Button } from "react-native-elements";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
-import { getDataJSON, mergeData, storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { getDataJSON, storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { addNotifications } from "../functions/NotificationFunctions";
 
 const LikeCommentButton = ({ postID, likes, navigateFunc }) => {
-  const [Notification, setNotification] = useState([]);
   const [count, setCount] = useState(likes);
   const [icon, setIcon] = useState("like2");
   return (
@@ -25,24 +25,12 @@ const LikeCommentButton = ({ postID, likes, navigateFunc }) => {
                 data.likes = likes + 1
                 await storeDataJSON(JSON.stringify(postID), JSON.stringify(data))
 
-                setNotification([
-                  auth.CurrentUser.username +
-                    "-notification-" +
-                    Math.random().toString(36).substring(7),
-                ]);
-                let currentNotification = {
-                  notificationID: Notification,
-                  reciever: data.name,
-                  sender: auth.CurrentUser.name,
-                  type: "like"
-                };
-
-                storeDataJSON(
-                  JSON.stringify(Notification),
-                  JSON.stringify(currentNotification)
-                );
-                let UserData2 = await getDataJSON(JSON.stringify(Notification));
-                console.log(UserData2);
+                addNotifications(
+                  auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
+                  data.name,
+                  auth.CurrentUser.name,
+                  "like"
+                  )
               }
               else {
                 setCount(count - 1);

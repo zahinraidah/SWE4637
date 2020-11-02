@@ -8,6 +8,7 @@ import HeaderTop from "../components/HeaderTop";
 import { getAllPosts } from "../functions/PostFunctions";
 import PostCard from "./../components/PostCard";
 import LikeCommentButton from "../components/LikeCommentButton";
+import { deleteUserInfo } from "../functions/ProfileFunctions";
 
 
 const ProfileScreen = (props) => {
@@ -51,7 +52,7 @@ const ProfileScreen = (props) => {
             icon={<AntDesign name="deleteuser" size={24} color="white" />}
             onPress={async () => {
               //clearAllData();
-              removeData(auth.CurrentUser.username);
+              deleteUserInfo(auth.CurrentUser.username);
               auth.setIsLoggedIn(false);
               auth.setCurrentUser({});
             }}

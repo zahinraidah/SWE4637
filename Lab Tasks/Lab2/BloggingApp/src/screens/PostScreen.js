@@ -5,17 +5,15 @@ import PostCard from "./../components/PostCard";
 
 import { AuthContext } from "../providers/AuthProvider";
 
-import { storeDataJSON } from "../functions/AsyncStorageFunctions";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
-import { getAllComments } from "../functions/PostFunctions";
+import { getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
+import { getAllComments, saveComment } from "../functions/PostFunctions";
+import { addNotifications } from "../functions/NotificationFunctions";
 
 import HeaderTop from "./../components/HeaderTop";
 import InputCard from "../components/InputCard";
 
 const PostScreen = (props) => {
   const postID = props.route.params.postId;
-  const [Notification, setNotification] = useState([]);
-  const [commentID, setCommentID] = useState([]);
   const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
@@ -75,6 +73,9 @@ const PostScreen = (props) => {
                         <PostCard
                           author={data.commenter}
                           body={data.comment}
+                          removeFunc={async () => {
+                            await removeData(JSON.stringify(data.commentId))
+                          }}
                         />
                       </Card>
                     </View>
@@ -90,45 +91,20 @@ const PostScreen = (props) => {
                 currentFunc={setInput}
                 currentText={input}
                 pressFunction={async () => {
-                  setCommentID([
-                    auth.CurrentUser.username+
-                      "-comment-" +
-                      Math.random().toString(36).substring(7),
-                  ]);
-                  let currentComment = {
-                    post: postID,
-                    reciever: posts.name,
-                    commentId: commentID,
-                    commneterID: auth.CurrentUser.username,
-                    commenter: auth.CurrentUser.name,
-                    comment: input,
-                  };
+                  saveComment(
+                    postID, 
+                    posts.name, 
+                    auth.CurrentUser.username + "-comment-" + Math.random().toString(36).substring(7),
+                    auth.CurrentUser.username, 
+                    auth.CurrentUser.name, 
+                    input)
 
-                  storeDataJSON(
-                    JSON.stringify(commentID),
-                    JSON.stringify(currentComment)
-                  );
-                  let UserData = await getDataJSON(JSON.stringify(commentID));
-                  console.log(UserData);
-
-                  setNotification([
-                    auth.CurrentUser.username +
-                      "-notification-" +
-                      Math.random().toString(36).substring(7),
-                  ]);
-                  let currentNotification = {
-                    notificationID: Notification,
-                    reciever: posts.name,
-                    sender: auth.CurrentUser.name,
-                    type: "comment"
-                  };
-
-                  storeDataJSON(
-                    JSON.stringify(Notification),
-                    JSON.stringify(currentNotification)
-                  );
-                  let UserData2 = await getDataJSON(JSON.stringify(Notification));
-                  console.log(UserData2);
+                  addNotifications(
+                    auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
+                    posts.name,
+                    auth.CurrentUser.name,
+                    "comment"
+                    )
                 }}
               />
             </Card>

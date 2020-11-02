@@ -3,9 +3,9 @@ import { View, StyleSheet, FlatList } from "react-native";
 import { Card } from "react-native-elements";
 import { useNetInfo } from "@react-native-community/netinfo";
 
-import { storeDataJSON } from "../functions/AsyncStorageFunctions";
+import { removeData, storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
-import { getAllPosts } from "../functions/PostFunctions";
+import { getAllPosts, savePost } from "../functions/PostFunctions";
 
 import { AuthContext } from "../providers/AuthProvider";
 
@@ -25,7 +25,6 @@ const HomeScreen = (props) => {
 
   const [posts, setPosts] = useState([]);
   const [postID, setpostID] = useState([]);
-  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState([]);
 
@@ -59,21 +58,12 @@ const HomeScreen = (props) => {
                 currentText={input}
                 pressFunction={async () => {
                   setpostID([auth.CurrentUser.username + "-post-" + Math.random().toString(36).substring(7)]);
-                  let currentPost = {
-                    username: auth.CurrentUser.username,
-                    name: auth.CurrentUser.name,
-                    postID: postID,
-                    post: input,
-                    likes: 0,
-                  };
-                  auth.setCurrentPost(postID);
-                  storeDataJSON(
-                    JSON.stringify(postID),
-                    JSON.stringify(currentPost)
-                  );
-
-                  let UserData = await getDataJSON(JSON.stringify(postID));
-                  console.log(UserData);
+                  savePost(
+                    auth.CurrentUser.username,
+                    auth.CurrentUser.name,
+                    postID,
+                    input
+                  )
                 }}
               />
             </Card>
@@ -89,11 +79,14 @@ const HomeScreen = (props) => {
                       <PostCard
                         author={data.name}
                         body={data.post}
+                        removeFunc={async () => {
+                          await removeData(JSON.stringify(data.postID))
+                        }}
                       />
                       <Card.Divider />
                       <LikeCommentButton
                         postID={data.postID}
-                        likes = {data.likes}
+                        likes={data.likes}
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", {
                             postId: data.postID,
