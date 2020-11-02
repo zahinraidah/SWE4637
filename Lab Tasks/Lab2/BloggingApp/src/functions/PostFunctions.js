@@ -34,6 +34,7 @@ const savePost = async (username, name, postID, input) => {
         JSON.stringify(currentPost)
     );
 
+    alert("Post Saved!")
     let UserData = await getDataJSON(JSON.stringify(postID));
     console.log(UserData);
 }
@@ -71,6 +72,8 @@ const saveComment = async (postID, postAuthor, commentID, commneterID, commenter
         JSON.stringify(commentID),
         JSON.stringify(currentComment)
       );
+
+      alert("Comment Saved!")
       let UserData = await getDataJSON(JSON.stringify(commentID));
       console.log(UserData);
 }

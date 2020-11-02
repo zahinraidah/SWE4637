@@ -77,13 +77,13 @@ const HomeScreen = (props) => {
                 let data = JSON.parse(item)
                 return (
                   <View>
-
                     <Card>
                       <PostCard
                         author={data.name}
                         body={data.post}
                         removeFunc={async () => {
                           await removeData(JSON.stringify(data.postID))
+                          alert("Post Deleted!");
                         }}
                       />
                       <Card.Divider />

@@ -17,7 +17,6 @@ const getUserInfo = async (name) => {
 
 const deleteUserInfo = async (name) => {
     let allData = await getUserInfo(name);
-    let userInfo = [];
     if (allData != null) {
         for (let data of allData) {
             await removeData(data);

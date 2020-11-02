@@ -4,7 +4,6 @@ import { AsyncStorage } from "react-native";
 const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, value);
-    alert("Data STored Successfully!");
   } catch (error) {
     alert(error);
   }
@@ -14,7 +13,6 @@ const storeDataJSON = async (key, value) => {
   try {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem(key, jsonValue);
-    alert("Data Stored Successfully!");
   } catch (error) {
     alert(error);
   }
@@ -87,7 +85,6 @@ const getAllData = async () => {
 const removeData = async (key) => {
   try {
     await AsyncStorage.removeItem(key);
-    alert("Data Removed Successfully");
   } catch (error) {
     alert(error);
   }
@@ -104,8 +101,7 @@ const mergeData = async (key, data) => {
 const clearAllData = async () => {
   try {
     AsyncStorage.getAllKeys()
-      .then(keys => AsyncStorage.multiRemove(keys))
-      .then(() => alert("Data Removed Successfully"));
+      .then(keys => AsyncStorage.multiRemove(keys));
   } catch (error) {
     alert(error);
   }

@@ -17,7 +17,6 @@ const PostCard = (props) => {
           rounded
           icon={{ name: "user", type: "font-awesome", color: "black" }}
           activeOpacity={1}
-          //onLongPress={}
         />
         <Text h4Style={{ padding: 10 }} h4>
           {props.author}

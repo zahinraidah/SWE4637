@@ -81,6 +81,7 @@ const PostScreen = (props) => {
                             body={data.comment}
                             removeFunc={async () => {
                               await removeData(JSON.stringify(data.commentId))
+                              alert("Comment Deleted!");
                             }}
                           />
                       </View>
