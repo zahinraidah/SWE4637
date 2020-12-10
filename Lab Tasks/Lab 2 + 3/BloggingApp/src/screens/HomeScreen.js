@@ -82,7 +82,7 @@ const HomeScreen = (props) => {
                     body: input,
                     author: auth.CurrentUser.displayName,
                     created_at: firebase.firestore.Timestamp.now(),
-                    likes: [],
+                    likes: 0,
                     comments: [],
                   })
                   .then(() => {
@@ -103,28 +103,34 @@ const HomeScreen = (props) => {
             renderItem={({ item }) => {
               return (
                 <View>
-                      <Card>
-                        <PostCard
-                          author={item.data.author}
-                          title={item.id}
-                          body={item.data.body}
-                          removeFunc={async () => {
-                            await removeData(JSON.stringify(item.postID))
-                            alert("Post Deleted!");
-                          }}
-                        />
-                        <Card.Divider />
-                        <LikeCommentButton
-                          postID={item.postID}
-                          likes={item.likes}
-                          navigateFunc={() => {
-                            props.navigation.navigate("PostScreen", {
-                              postId: item.postID,
-                            });
-                          }}
-                        />
-                      </Card>
-                    </View>
+                  <Card>
+                    <PostCard
+                      author={item.data.author}
+                      title={item.id}
+                      body={item.data.body}
+                      removeFunc={async () => {
+                        firebase
+                          .firestore()
+                          .collection('posts')
+                          .doc(item.id)
+                          .delete()
+                          .then(() => {
+                            console.log('Post deleted!');
+                          });
+                      }}
+                    />
+                    <Card.Divider />
+                    <LikeCommentButton
+                      postID={item.id}
+                      likes={item.data.likes}
+                      navigateFunc={() => {
+                        props.navigation.navigate("PostScreen", {
+                          postId: item.id,
+                        });
+                      }}
+                    />
+                  </Card>
+                </View>
               );
             }}
           />
