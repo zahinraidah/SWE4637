@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  ImageBackground,
 } from "react-native";
 import { Card, Button, Text, Avatar, Input } from "react-native-elements";
 import PostCard from "./../components/PostCard";
@@ -15,6 +16,9 @@ import { AuthContext } from "../providers/AuthProvider";
 import { useNetInfo } from "@react-native-community/netinfo";
 import * as firebase from "firebase";
 import "firebase/firestore";
+import { getAllPosts, savePost } from "../functions/PostFunctions";
+
+const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
 
 const HomeScreen = (props) => {
   const netinfo = useNetInfo();
@@ -25,28 +29,14 @@ const HomeScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
 
-  const loadPosts = async () => {
+  const loadPosts = async() => {
     setLoading(true);
-    firebase
-      .firestore()
-      .collection("posts")
-      .orderBy("created_at", "desc")
-      .onSnapshot((querySnapshot) => {
-        let temp_posts = [];
-        querySnapshot.forEach((doc) => {
-          temp_posts.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-        setPosts(temp_posts);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-        alert(error);
-      });
-  };
+    await getAllPosts().then((response) => {
+      setPosts(response.data);
+      console.log(posts)
+      setLoading(false);
+    });
+  }
 
   useEffect(() => {
     loadPosts();
@@ -56,84 +46,72 @@ const HomeScreen = (props) => {
     <AuthContext.Consumer>
       {(auth) => (
         <View style={styles.viewStyle}>
-          <HeaderTop
-            DrawerFunction={() => {
-              props.navigation.toggleDrawer();
-            }}
-          />
-          <Card>
-            <Input
-              placeholder="What's On Your Mind?"
-              leftIcon={<Entypo name="pencil" size={24} color="black" />}
-              onChangeText={(currentText) => {
-                setInput(currentText);
+          <ImageBackground source={image} style={styles.image}>
+            <HeaderTop
+              DrawerFunction={() => {
+                props.navigation.toggleDrawer();
               }}
             />
-            <Button
-              title="Post"
-              type="outline"
-              onPress={function () {
-                setLoading(true);
-                firebase
-                  .firestore()
-                  .collection("posts")
-                  .add({
-                    userId: auth.CurrentUser.uid,
-                    body: input,
-                    author: auth.CurrentUser.displayName,
-                    created_at: firebase.firestore.Timestamp.now(),
-                    likes: 0,
-                    comments: [],
-                  })
-                  .then(() => {
-                    setLoading(false);
-                    alert("Post created Successfully!");
-                  })
-                  .catch((error) => {
-                    setLoading(false);
-                    alert(error);
-                  });
-              }}
-            />
-          </Card>
-          <ActivityIndicator size="large" color="red" animating={loading} />
+            <Card>
+              <Input
+                placeholder="What's On Your Mind?"
+                leftIcon={<Entypo name="pencil" size={24} color="black" />}
+                onChangeText={(currentText) => {
+                  setInput(currentText);
+                }}
+              />
+              <Button
+                title="Post"
+                type="outline"
+                onPress={function () {
+                  setLoading(true);
+                  savePost(
+                    auth.CurrentUser.uid,
+                    input,
+                    auth.CurrentUser.displayName
+                  );
+                }}
+              />
+            </Card>
+            <ActivityIndicator size="large" color="red" animating={loading} />
 
-          <FlatList
-            data={posts}
-            renderItem={({ item }) => {
-              return (
-                <View>
-                  <Card>
-                    <PostCard
-                      author={item.data.author}
-                      title={item.id}
-                      body={item.data.body}
-                      removeFunc={async () => {
-                        firebase
-                          .firestore()
-                          .collection('posts')
-                          .doc(item.id)
-                          .delete()
-                          .then(() => {
-                            console.log('Post deleted!');
+            <FlatList
+              data={posts}
+              renderItem={({ item }) => {
+                return (
+                  <View>
+                    <Card>
+                      <PostCard
+                        author={item.data.author}
+                        title={item.id}
+                        body={item.data.body}
+                        removeFunc={async () => {
+                          firebase
+                            .firestore()
+                            .collection('posts')
+                            .doc(item.id)
+                            .delete()
+                            .then(() => {
+                              console.log('Post deleted!');
+                            });
+                        }}
+                      />
+                      <Card.Divider />
+                      <LikeCommentButton
+                        postID={item.id}
+                        likes={item.data.likes}
+                        navigateFunc={() => {
+                          props.navigation.navigate("PostScreen", {
+                            postId: item.id,
                           });
-                      }}
-                    />
-                    <Card.Divider />
-                    <LikeCommentButton
-                      postID={item.id}
-                      likes={item.data.likes}
-                      navigateFunc={() => {
-                        props.navigation.navigate("PostScreen", {
-                          postId: item.id,
-                        });
-                      }}
-                    />
-                  </Card>
-                </View>
-              );
-            }}
-          />
+                        }}
+                      />
+                    </Card>
+                  </View>
+                );
+              }}
+            />
+          </ImageBackground>
         </View>
       )}
     </AuthContext.Consumer>
@@ -147,6 +125,11 @@ const styles = StyleSheet.create({
   },
   viewStyle: {
     flex: 1,
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
   },
 });
 
