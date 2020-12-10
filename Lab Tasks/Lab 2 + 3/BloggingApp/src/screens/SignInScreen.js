@@ -1,31 +1,38 @@
 import React, { useState } from "react";
-import { View, StyleSheet, ImageBackground } from "react-native";
+
+import { View, StyleSheet } from "react-native";
 import { Input, Button, Card } from "react-native-elements";
-import { Feather, AntDesign } from "@expo/vector-icons";
+import { FontAwesome, Feather, AntDesign } from "@expo/vector-icons";
+
 import { AuthContext } from "../providers/AuthProvider";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
+
+import * as firebase from "firebase";
+import Loading from "./../components/Loading";
 
 const SignInScreen = (props) => {
-  const [ID, setID] = useState("");
+  const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  
-  const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
-
-  return (
-    <AuthContext.Consumer>
-      {(auth) => (
-        <View style={styles.viewStyle}>
-          <ImageBackground source={image} style={styles.image}>
+  const [isLoading, setIsLoading] = useState(false);
+  if (isLoading) {
+    return <Loading />;
+  } else {
+    return (
+      <AuthContext.Consumer>
+        {(auth) => (
+          <View style={styles.viewStyle}>
             <Card>
-              <Card.Title>Blog App in React-Native</Card.Title>
+              <Card.Title>Welcome to My Blog!</Card.Title>
               <Card.Divider />
               <Input
-                leftIcon={<AntDesign name="user" size={24} color="black" />}
-                placeholder="Username"
+                leftIcon={
+                  <FontAwesome name="envelope" size={24} color="black" />
+                }
+                placeholder="E-mail Address"
                 onChangeText={function (currentInput) {
-                  setID(currentInput);
+                  setEmail(currentInput);
                 }}
               />
+
               <Input
                 placeholder="Password"
                 leftIcon={<Feather name="key" size={24} color="black" />}
@@ -39,15 +46,20 @@ const SignInScreen = (props) => {
                 icon={<AntDesign name="login" size={24} color="white" />}
                 title="  Sign In!"
                 type="solid"
-                onPress={async function () {
-                  let UserData = await getDataJSON(ID);
-                  if (UserData.password == Password) {
-                    auth.setIsLoggedIn(true);
-                    auth.setCurrentUser(UserData);
-                  } else {
-                    alert("Login Failed");
-                    console.log(UserData);
-                  }
+                onPress={() => {
+                  setIsLoading(true);
+                  firebase
+                    .auth()
+                    .signInWithEmailAndPassword(Email, Password)
+                    .then((userCreds) => {
+                      setIsLoading(false);
+                      auth.setIsLoggedIn(true);
+                      auth.setCurrentUser(userCreds.user);
+                    })
+                    .catch((error) => {
+                      setIsLoading(false);
+                      alert(error);
+                    });
                 }}
               />
               <Button
@@ -59,11 +71,11 @@ const SignInScreen = (props) => {
                 }}
               />
             </Card>
-          </ImageBackground>
-        </View>
-      )}
-    </AuthContext.Consumer>
-  );
+          </View>
+        )}
+      </AuthContext.Consumer>
+    );
+  }
 };
 
 const styles = StyleSheet.create({
@@ -71,11 +83,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     backgroundColor: "#4bacb8",
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center"
   },
 });
 export default SignInScreen;

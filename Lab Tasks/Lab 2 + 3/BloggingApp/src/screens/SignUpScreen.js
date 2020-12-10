@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+
 import { View, StyleSheet, ImageBackground } from "react-native";
 import { Input, Button, Card } from "react-native-elements";
 import { FontAwesome, Feather, AntDesign, Ionicons } from "@expo/vector-icons";
+
 import { storeDataJSON } from "../functions/AsyncStorageFunctions";
 import { getDataJSON } from "../functions/AsyncStorageFunctions";
+
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const SignUpScreen = (props) => {
   const [username, setUsername] = useState("");
@@ -11,6 +16,7 @@ const SignUpScreen = (props) => {
   const [SID, setSID] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const image = {uri:"https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg"};
 
@@ -20,13 +26,6 @@ const SignUpScreen = (props) => {
         <Card>
           <Card.Title>Welcome to AuthApp!</Card.Title>
           <Card.Divider />
-          <Input
-            leftIcon={<AntDesign name="user" size={24} color="black" />}
-            placeholder="Username"
-            onChangeText={function (currentInput) {
-              setUsername(currentInput);
-            }}
-          />
           <Input
             leftIcon={<Ionicons name="ios-person" size={24} color="black" />}
             placeholder="Name"
@@ -62,18 +61,41 @@ const SignUpScreen = (props) => {
             icon={<AntDesign name="user" size={24} color="white" />}
             title="  Sign Up!"
             type="solid"
-            onPress={async function () {
-              let currentUser = {
-                username: username,
-                name: Name,
-                password: Password,
-                email: Email,
-                SID: SID,
-              };
-              storeDataJSON(username, currentUser);
-              let UserData = await getDataJSON(username);
-              console.log(UserData);
-              props.navigation.navigate("SignIn");
+            onPress={() => {
+              if (Name && SID && Email && Password) {
+                setLoading(true);
+                firebase
+                  .auth()
+                  .createUserWithEmailAndPassword(Email, Password)
+                  .then((userCreds) => {
+                    userCreds.user.updateProfile({ displayName: Name });
+                    firebase
+                      .firestore()
+                      .collection("users")
+                      .doc(userCreds.user.uid)
+                      .set({
+                        name: Name,
+                        sid: SID,
+                        email: Email,
+                      })
+                      .then(() => {
+                        setLoading(false);
+                        alert("Account created successfully!");
+                        console.log(userCreds.user);
+                        props.navigation.navigate("SignIn");
+                      })
+                      .catch((error) => {
+                        setLoading(false);
+                        alert(error);
+                      });
+                  })
+                  .catch((error) => {
+                    setLoading(false);
+                    alert(error);
+                  });
+              } else {
+                alert("Fields can not be empty!");
+              }
             }}
           />
           <Button

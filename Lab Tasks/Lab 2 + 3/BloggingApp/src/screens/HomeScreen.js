@@ -1,119 +1,137 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, ImageBackground } from "react-native";
-import { Card } from "react-native-elements";
-import { useNetInfo } from "@react-native-community/netinfo";
-
-import { removeData } from "../functions/AsyncStorageFunctions";
-import { getAllPosts, savePost } from "../functions/PostFunctions";
-
-import { AuthContext } from "../providers/AuthProvider";
-
+import {
+  ScrollView,
+  View,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+import { Card, Button, Text, Avatar, Input } from "react-native-elements";
 import PostCard from "./../components/PostCard";
-import HeaderTop from "./../components/HeaderTop";
-import InputCard from "../components/InputCard";
-import LikeCommentButton from "../components/LikeCommentButton";
-import Loading from "../components/Loading";
-
+import HeaderTop from "../components/HeaderTop";
+import LikeCommentButton from "../components/LikeCommentButton"
+import { AntDesign, Entypo } from "@expo/vector-icons";
+import { AuthContext } from "../providers/AuthProvider";
+import { useNetInfo } from "@react-native-community/netinfo";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const HomeScreen = (props) => {
-
   const netinfo = useNetInfo();
   if (netinfo.type != "unknown" && !netinfo.isInternetReachable) {
     alert("No Internet!");
   }
-
   const [posts, setPosts] = useState([]);
-  const [postID, setpostID] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [input, setInput] = useState([]);
-
-  const image = { uri: "https://i.pinimg.com/originals/59/11/cd/5911cda1f1ae980b26ca367af3197dfd.jpg" };
+  const [input, setInput] = useState("");
 
   const loadPosts = async () => {
     setLoading(true);
-    let response = await getAllPosts();
-    if (response != null) {
-      setPosts(response);
-    }
-    setLoading(false);
+    firebase
+      .firestore()
+      .collection("posts")
+      .orderBy("created_at", "desc")
+      .onSnapshot((querySnapshot) => {
+        let temp_posts = [];
+        querySnapshot.forEach((doc) => {
+          temp_posts.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        setPosts(temp_posts);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        alert(error);
+      });
   };
 
   useEffect(() => {
     loadPosts();
   }, []);
 
-  if (!loading) {
-    return (
-      <AuthContext.Consumer>
-        {(auth) => (
-          <View style={styles.viewStyle}>
-            <ImageBackground source={image} style={styles.image}>
-            <HeaderTop
-              DrawerFunction={() => {
-                props.navigation.toggleDrawer();
+  return (
+    <AuthContext.Consumer>
+      {(auth) => (
+        <View style={styles.viewStyle}>
+          <HeaderTop
+            DrawerFunction={() => {
+              props.navigation.toggleDrawer();
+            }}
+          />
+          <Card>
+            <Input
+              placeholder="What's On Your Mind?"
+              leftIcon={<Entypo name="pencil" size={24} color="black" />}
+              onChangeText={(currentText) => {
+                setInput(currentText);
               }}
             />
-            <Card>
-              <InputCard
-                Text="What's On Your Mind?"
-                currentFunc={setInput}
-                currentText={input}
-                pressFunction={async () => {
-                  setpostID([auth.CurrentUser.username + "-post-" + Math.random().toString(36).substring(7)]);
-                  savePost(
-                    auth.CurrentUser.username,
-                    auth.CurrentUser.name,
-                    postID,
-                    input
-                  )
-                }}
-              />
-            </Card>
-            <FlatList
-              data={posts}
-              onRefresh={loadPosts}
-              refreshing={loading}
-              renderItem={function ({ item }) {
-                let data = JSON.parse(item)
-                return (
-                  <View>
-                    <Card>
-                      <PostCard
-                        author={data.name}
-                        body={data.post}
-                        removeFunc={async () => {
-                          await removeData(JSON.stringify(data.postID))
-                          alert("Post Deleted!");
-                        }}
-                      />
-                      <Card.Divider />
-                      <LikeCommentButton
-                        postID={data.postID}
-                        likes={data.likes}
-                        navigateFunc={() => {
-                          props.navigation.navigate("PostScreen", {
-                            postId: data.postID,
-                          });
-                        }}
-                      />
-                    </Card>
-                  </View>
-                );
+            <Button
+              title="Post"
+              type="outline"
+              onPress={function () {
+                setLoading(true);
+                firebase
+                  .firestore()
+                  .collection("posts")
+                  .add({
+                    userId: auth.CurrentUser.uid,
+                    body: input,
+                    author: auth.CurrentUser.displayName,
+                    created_at: firebase.firestore.Timestamp.now(),
+                    likes: [],
+                    comments: [],
+                  })
+                  .then(() => {
+                    setLoading(false);
+                    alert("Post created Successfully!");
+                  })
+                  .catch((error) => {
+                    setLoading(false);
+                    alert(error);
+                  });
               }}
-              keyExtractor={(item, index) => index.toString()}
             />
-            </ImageBackground>
-          </View>
-        )}
-      </AuthContext.Consumer>
-    );
-  } else {
-    return (
-      <View style={{ flex: 1, justifyContent: "center" }}>
-        <Loading />
-      </View>
-    );
-  }
+          </Card>
+          <ActivityIndicator size="large" color="red" animating={loading} />
+
+          <FlatList
+            data={posts}
+            renderItem={({ item }) => {
+              return (
+                <View>
+                      <Card>
+                        <PostCard
+                          author={item.data.author}
+                          title={item.id}
+                          body={item.data.body}
+                          removeFunc={async () => {
+                            await removeData(JSON.stringify(item.postID))
+                            alert("Post Deleted!");
+                          }}
+                        />
+                        <Card.Divider />
+                        <LikeCommentButton
+                          postID={item.postID}
+                          likes={item.likes}
+                          navigateFunc={() => {
+                            props.navigation.navigate("PostScreen", {
+                              postId: item.postID,
+                            });
+                          }}
+                        />
+                      </Card>
+                    </View>
+              );
+            }}
+          />
+        </View>
+      )}
+    </AuthContext.Consumer>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -123,11 +141,6 @@ const styles = StyleSheet.create({
   },
   viewStyle: {
     flex: 1,
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center"
   },
 });
 
