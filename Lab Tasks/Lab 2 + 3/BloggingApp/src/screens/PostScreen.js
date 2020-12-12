@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, FlatList, ActivityIndicator, ScrollView, ImageBackground } from "react-native";
+import { LogBox, View, StyleSheet, FlatList, ActivityIndicator, ScrollView, ImageBackground } from "react-native";
 import { Card } from "react-native-elements";
 import PostCard from "./../components/PostCard";
 
 import { AuthContext } from "../providers/AuthProvider";
 
 import { getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
-import { getAllComments, saveComment } from "../functions/PostFunctions";
+import { getAllComments, saveComment, deleteComment } from "../functions/CommentFunctions";
 import { addNotifications } from "../functions/NotificationFunctions";
 
 import HeaderTop from "./../components/HeaderTop";
 import InputCard from "../components/InputCard";
+
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const PostScreen = (props) => {
   const postID = props.route.params.postId;
@@ -20,28 +23,48 @@ const PostScreen = (props) => {
   const [input, setInput] = useState([]);
 
   const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
-
-  const loadIndividualPost = async () => {
-    let response = await getDataJSON(JSON.stringify(postID));
-    if (response != null) {
-      return response;
-    }
+  const loadSinglePost = async () => {
+    setLoading(true);
+    firebase
+      .firestore()
+      .collection('posts')
+      .doc(postID)
+      .get()
+      .then((response) => {
+        setPosts(response);
+        setLoading(false);
+      }
+      )
+      .catch((error) => {
+        setLoading(false);
+        alert(error);
+      });
   };
 
   const loadComments = async () => {
     setLoading(true);
-    let response = await getAllComments();
-    if (response != null) {
-      setComments(response);
-    }
-    setLoading(false);
+    firebase
+      .firestore()
+      .collection("posts")
+      .orderBy("created_at", "desc")
+      .onSnapshot((querySnapshot) => {
+        let temp_posts = [];
+        querySnapshot.forEach((doc) => {
+          temp_posts.push({
+            id: doc.id,
+            data: doc.data().comments,
+          });
+        });
+        setComments(temp_posts);
+        setLoading(false);
+      });
   };
-
+  console.log(comments);
   useEffect(() => {
-    loadIndividualPost().then((response) => {
-      setPosts(JSON.parse(response));
-    });
+    loadSinglePost();
     loadComments();
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    LogBox.ignoreLogs(['Setting a timer for a long period of time']);
   }, []);
 
   if (!loading) {
@@ -50,72 +73,87 @@ const PostScreen = (props) => {
         {(auth) => (
           <View style={styles.viewStyle}>
             <ImageBackground source={image} style={styles.image}>
-            <HeaderTop
-              DrawerFunction={() => {
-                props.navigation.toggleDrawer();
-              }}
-            />
-
-            <Card>
-              <Card.Title>Post</Card.Title>
-              <PostCard
-                author={posts.name}
-                body={posts.post}
+              <HeaderTop
+                DrawerFunction={() => {
+                  props.navigation.toggleDrawer();
+                }}
               />
-            </Card>
 
-            <ScrollView>
-            <Card>
-              <Card.Title>Comments</Card.Title>
-              <FlatList
-                data={comments}
-                onRefresh={loadComments}
-                refreshing={loading}
-                renderItem={function ({ item }) {
-                  let data = JSON.parse(item);
-                  if (JSON.stringify(data.post) === JSON.stringify(postID)) {
-                    return (
-                      <View>
-                          <PostCard
-                            author={data.commenter}
-                            body={data.comment}
-                            removeFunc={async () => {
-                              await removeData(JSON.stringify(data.commentId))
-                              alert("Comment Deleted!");
-                            }}
-                          />
-                      </View>
-                    );
-                  }
-                }
-                }
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </Card>
-            </ScrollView>
-            <Card>
+              <Card>
+                <Card.Title>Post</Card.Title>
+                <PostCard
+                  author={posts.author}
+                  body={posts.body}
+                />
+              </Card>
+
+              <ScrollView>
+                <Card>
+                  <Card.Title>Comments</Card.Title>
+                  <FlatList
+                    data={comments}
+                    renderItem={({ item }) => {
+                      return (
+                        <View>
+                          <Card>
+                            <PostCard
+                              author={item.data.commenter}
+                              title={item.id}
+                              body={item.data.comment}
+                              removeFunc={async () => {
+                                deleteComment(item.id);
+                              }}
+                            />
+                          </Card>
+                        </View>
+                      );
+                    }}
+                  />
+                </Card>
+              </ScrollView>
+              <Card>
                 <InputCard
                   Text="Post a Comment"
                   currentFunc={setInput}
                   currentText={input}
                   pressFunction={async () => {
-                    saveComment(
-                      postID,
-                      posts.name,
-                      auth.CurrentUser.username + "-comment-" + Math.random().toString(36).substring(7),
-                      auth.CurrentUser.username,
-                      auth.CurrentUser.name,
-                      input)
+                    firebase
+                      .firestore()
+                      .collection('posts')
+                      .doc(postID)
+                      .update({
+                        comments: firebase.firestore.FieldValue.arrayUnion({
+                          comment: input,
+                          commenter: auth.CurrentUser.displayName,
+                          receiver: auth.CurrentUser.uid,
+                          created_at: firebase.firestore.Timestamp.now(),
+                        }),
+                      })
+                      .then(() => {
+                        setLoading(false);
+                        alert('Comment created successfully!');
+                      })
+                      .catch((error) => {
+                        setLoading(false);
+                        alert(error);
+                      });
 
-                    addNotifications(
-                      auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
-                      posts.name,
-                      auth.CurrentUser.name,
-                      "comment"
-                    )
+                    // saveComment(
+                    //   postID,
+                    //   input,
+                    //   auth.CurrentUser.name,
+                    //   posts.data.author
+                    // )
+
+                    // addNotifications(
+                    //   auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
+                    //   posts.name,
+                    //   auth.CurrentUser.name,
+                    //   "comment"
+                    // )
                   }}
                 />
-            </Card>
+              </Card>
             </ImageBackground>
           </View>
         )}

@@ -4,7 +4,7 @@ import { Button } from "react-native-elements";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 
 import { AuthContext } from "../providers/AuthProvider";
-import { getDataJSON, storeDataJSON } from "../functions/AsyncStorageFunctions";
+// import { getDataJSON, storeDataJSON } from "../functions/AsyncStorageFunctions";
 
 import { addNotifications } from "../functions/NotificationFunctions";
 
@@ -28,18 +28,17 @@ const LikeCommentButton = ({ postID, likes, navigateFunc }) => {
                   .collection('posts')
                   .doc(postID)
                   .update({
-                    likes: likes+1,
+                    likes: likes + 1,
                   })
                   .then(() => {
                     setIcon("like1");
                   });
-
-                addNotifications(
-                  auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
-                  postID,
-                  auth.CurrentUser.name,
-                  "like"
-                )
+                // addNotifications(
+                //   auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
+                //   postID,
+                //   auth.CurrentUser.name,
+                //   "like"
+                // )
               }
               else {
                 console.log("like1");
@@ -48,7 +47,7 @@ const LikeCommentButton = ({ postID, likes, navigateFunc }) => {
                   .collection('posts')
                   .doc(postID)
                   .update({
-                    likes: likes-1,
+                    likes: likes - 1,
                   })
                   .then(() => {
                     setIcon("like2")

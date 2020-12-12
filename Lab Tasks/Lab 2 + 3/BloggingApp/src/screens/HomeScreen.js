@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from "react";
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-  FlatList,
-  ActivityIndicator,
-  ImageBackground,
-} from "react-native";
+
+import { LogBox, View, StyleSheet, FlatList, ActivityIndicator, ImageBackground } from "react-native";
 import { Card, Button, Text, Avatar, Input } from "react-native-elements";
-import PostCard from "./../components/PostCard";
-import HeaderTop from "../components/HeaderTop";
-import LikeCommentButton from "../components/LikeCommentButton"
+
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
 import { useNetInfo } from "@react-native-community/netinfo";
+
+import PostCard from "./../components/PostCard";
+import HeaderTop from "../components/HeaderTop";
+import LikeCommentButton from "../components/LikeCommentButton"
+
 import * as firebase from "firebase";
 import "firebase/firestore";
-import { getAllPosts, savePost } from "../functions/PostFunctions";
+
+import { getAllPosts, savePost, deletePost } from "../functions/PostFunctions";
 
 const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
 
@@ -29,17 +27,29 @@ const HomeScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [input, setInput] = useState("");
 
-  const loadPosts = async() => {
+  const loadPosts = async () => {
     setLoading(true);
-    await getAllPosts().then((response) => {
-      setPosts(response.data);
-      console.log(posts)
-      setLoading(false);
-    });
-  }
+    firebase
+      .firestore()
+      .collection("posts")
+      .orderBy("created_at", "desc")
+      .onSnapshot((querySnapshot) => {
+        let temp_posts = [];
+        querySnapshot.forEach((doc) => {
+          temp_posts.push({
+            id: doc.id,
+            data: doc.data(),
+          });
+        });
+        setPosts(temp_posts);
+        setLoading(false);
+      });
+  };
 
   useEffect(() => {
     loadPosts();
+    LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
+    LogBox.ignoreLogs(['Setting a timer for a long period of time']);
   }, []);
 
   return (
@@ -86,14 +96,7 @@ const HomeScreen = (props) => {
                         title={item.id}
                         body={item.data.body}
                         removeFunc={async () => {
-                          firebase
-                            .firestore()
-                            .collection('posts')
-                            .doc(item.id)
-                            .delete()
-                            .then(() => {
-                              console.log('Post deleted!');
-                            });
+                          deletePost(item.id);
                         }}
                       />
                       <Card.Divider />
