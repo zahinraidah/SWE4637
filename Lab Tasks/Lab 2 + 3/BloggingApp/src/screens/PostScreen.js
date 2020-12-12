@@ -122,7 +122,7 @@ const PostScreen = (props) => {
                     firebase
                       .firestore()
                       .collection('posts')
-                      .doc(info.postId)
+                      .doc(item.id)
                       .update({
                         comments: firebase.firestore.FieldValue.arrayUnion({
                           ID: Math.random().toString(36).substring(7),
@@ -143,7 +143,7 @@ const PostScreen = (props) => {
                       firebase
                       .firestore()
                       .collection('users')
-                      .doc(info.data.userId)
+                      .doc(item.data.userId)
                       .update({
                         notifications: firebase.firestore.FieldValue.arrayUnion({
                           ID: Math.random().toString(36).substring(7), 

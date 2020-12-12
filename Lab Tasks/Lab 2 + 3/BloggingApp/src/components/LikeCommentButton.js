@@ -33,12 +33,22 @@ const LikeCommentButton = ({ postID, likes, navigateFunc }) => {
                   .then(() => {
                     setIcon("like1");
                   });
-                // addNotifications(
-                //   auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
-                //   postID,
-                //   auth.CurrentUser.name,
-                //   "like"
-                // )
+                  firebase
+                      .firestore()
+                      .collection('users')
+                      .doc(firebase.auth().currentUser.uid)
+                      .update({
+                        notifications: firebase.firestore.FieldValue.arrayUnion({
+                          ID: Math.random().toString(36).substring(7), 
+                          sender: auth.CurrentUser.displayName,
+                          receiver: auth.CurrentUser.uid,
+                          created_at: firebase.firestore.Timestamp.now(),
+                          type: "like",
+                        }),
+                      })
+                      .catch((error) => {
+                        alert(error);
+                      });
               }
               else {
                 console.log("like1");

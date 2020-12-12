@@ -26,9 +26,10 @@ const NotificationScreen = (props) => {
       .onSnapshot((querySnapshot) => {
         let temp_notifications = [];
         querySnapshot.data().notifications.forEach((doc) => {
-          temp_comments.push(doc);
+          temp_notifications.push(doc);
         });;
         setNotification(temp_notifications);
+        console.log(Notification);
         setLoading(false);
       });
   };
@@ -52,18 +53,17 @@ const NotificationScreen = (props) => {
             onRefresh={loadNotifications}
             refreshing={loading}
             renderItem={function ({ item }) {
-              if (item.reciever == auth.CurrentUser.uid) {
                 return (
                   <View>
                     <Card>
                       <NotificationCard
-                        Text = {data.commenter}
-                        Type = "comment"
+                        Text = {item.sender}
+                        Type = {item.type}
                       />
                     </Card>
                   </View>
                 );
-              }
+              
             }}
             keyExtractor={(item, index) => index.toString()}
           />
