@@ -1,22 +1,19 @@
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-const getAllComments = async () => {
-    let keys = await getAllData();
-    let allComments = [];
-    try {
-        if (keys != null) {
-            for (let key of keys) {
-                if (key.includes('comment')) {
-                    let comment = await getDataJSON(key);
-                    allComments.push(comment);
-                }
-            }
-            return allComments;
-        }
-    } catch (error) {
-        alert(error);
-    }
+const getAllComments = async (post) => {
+  firebase
+      .firestore()
+      .collection('posts')
+      .doc(post)
+      .onSnapshot((querySnapshot) => {
+        let temp_comments = [];
+        querySnapshot.data().comments.forEach((doc) => {
+          temp_comments.push(doc);
+        });
+        console.log(temp_comments);
+        return temp_comments;
+      });
 }
 
 const saveComment = async (postID, receiver, commenterName, input) => {

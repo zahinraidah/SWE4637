@@ -113,6 +113,7 @@ const HomeScreen = (props) => {
                   </View>
                 );
               }}
+              keyExtractor={(item, index) => index.toString()}
             />
           </ImageBackground>
         </View>

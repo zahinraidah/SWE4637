@@ -16,7 +16,8 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 const PostScreen = (props) => {
-  const postID = props.route.params.postId;
+  let info = props.route.params;
+  console.log(info);
   const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
@@ -25,41 +26,42 @@ const PostScreen = (props) => {
   const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
   const loadSinglePost = async () => {
     setLoading(true);
-    firebase
-      .firestore()
-      .collection('posts')
-      .doc(postID)
-      .get()
-      .then((response) => {
-        setPosts(response);
-        setLoading(false);
-      }
-      )
-      .catch((error) => {
-        setLoading(false);
-        alert(error);
-      });
+    //setPosts(info)
+    setLoading(false);
+   // firebase
+    //   .firestore()
+    //   .collection('posts')
+    //   .doc(info.postId)
+    //   .onSnapshot((querySnapshot) => {
+    //     let temp_comments = [];
+    //     querySnapshot.data().comments.forEach((doc) => {
+    //       temp_comments.push(doc);
+    //     });
+    //     setComments(temp_comments);
+    //     setLoading(false);
+    //   })
+    //   .catch((error) => {
+    //     setLoading(false);
+    //     alert(error);
+    //   })
   };
 
   const loadComments = async () => {
     setLoading(true);
     firebase
       .firestore()
-      .collection("posts")
-      .orderBy("created_at", "desc")
+      .collection('posts')
+      .doc(info.postId)
       .onSnapshot((querySnapshot) => {
-        let temp_posts = [];
-        querySnapshot.forEach((doc) => {
-          temp_posts.push({
-            id: doc.id,
-            data: doc.data().comments,
-          });
+        let temp_comments = [];
+        querySnapshot.data().comments.forEach((doc) => {
+          temp_comments.push(doc);
         });
-        setComments(temp_posts);
+        setComments(temp_comments);
         setLoading(false);
       });
   };
-  console.log(comments);
+
   useEffect(() => {
     loadSinglePost();
     loadComments();
@@ -97,9 +99,9 @@ const PostScreen = (props) => {
                         <View>
                           <Card>
                             <PostCard
-                              author={item.data.commenter}
+                              author={item.commenter}
                               title={item.id}
-                              body={item.data.comment}
+                              body={item.comment}
                               removeFunc={async () => {
                                 deleteComment(item.id);
                               }}
@@ -108,6 +110,7 @@ const PostScreen = (props) => {
                         </View>
                       );
                     }}
+                    keyExtractor={(item, index) => index.toString()}
                   />
                 </Card>
               </ScrollView>
