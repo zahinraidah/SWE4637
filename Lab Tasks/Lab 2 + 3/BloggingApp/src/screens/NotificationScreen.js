@@ -7,6 +7,9 @@ import NotificationCard from "../components/NotificationCard";
 import { getAllNotifications } from "../functions/NotificationFunctions";
 import { getAllComments } from "../functions/PostFunctions";
 
+import * as firebase from "firebase";
+import "firebase/firestore";
+
 const NotificationScreen = (props) => {
   const [Notification, setNotification] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -15,11 +18,19 @@ const NotificationScreen = (props) => {
 
   const loadNotifications = async () => {
     setLoading(true);
-    let response = await getAllNotifications();
-    if (response != null) {
-      setNotification(response);
-    }
-    setLoading(false);
+    console.log("inside load")
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid)
+      .onSnapshot((querySnapshot) => {
+        let temp_notifications = [];
+        querySnapshot.data().notifications.forEach((doc) => {
+          temp_comments.push(doc);
+        });;
+        setNotification(temp_notifications);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -41,14 +52,13 @@ const NotificationScreen = (props) => {
             onRefresh={loadNotifications}
             refreshing={loading}
             renderItem={function ({ item }) {
-              let data = JSON.parse(item)
-              if (data.reciever == auth.CurrentUser.name) {
+              if (item.reciever == auth.CurrentUser.uid) {
                 return (
                   <View>
                     <Card>
                       <NotificationCard
-                        Text = {data.sender}
-                        Type = {data.type}
+                        Text = {data.commenter}
+                        Type = "comment"
                       />
                     </Card>
                   </View>

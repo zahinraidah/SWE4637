@@ -93,7 +93,6 @@ const HomeScreen = (props) => {
                     <Card>
                       <PostCard
                         author={item.data.author}
-                        title={item.id}
                         body={item.data.body}
                         removeFunc={async () => {
                           deletePost(item.id);
@@ -104,9 +103,7 @@ const HomeScreen = (props) => {
                         postID={item.id}
                         likes={item.data.likes}
                         navigateFunc={() => {
-                          props.navigation.navigate("PostScreen", {
-                            postId: item.id,
-                          });
+                          props.navigation.navigate("PostScreen", item);
                         }}
                       />
                     </Card>

@@ -16,8 +16,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 const PostScreen = (props) => {
-  let info = props.route.params;
-  console.log(info);
+  let item = props.route.params;
   const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
@@ -26,24 +25,16 @@ const PostScreen = (props) => {
   const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
   const loadSinglePost = async () => {
     setLoading(true);
-    //setPosts(info)
-    setLoading(false);
-   // firebase
-    //   .firestore()
-    //   .collection('posts')
-    //   .doc(info.postId)
-    //   .onSnapshot((querySnapshot) => {
-    //     let temp_comments = [];
-    //     querySnapshot.data().comments.forEach((doc) => {
-    //       temp_comments.push(doc);
-    //     });
-    //     setComments(temp_comments);
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => {
-    //     setLoading(false);
-    //     alert(error);
-    //   })
+    firebase
+      .firestore()
+      .collection('posts')
+      .doc(item.id)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          setPosts(documentSnapshot.data());
+        }
+      });
   };
 
   const loadComments = async () => {
@@ -51,7 +42,7 @@ const PostScreen = (props) => {
     firebase
       .firestore()
       .collection('posts')
-      .doc(info.postId)
+      .doc(item.id)
       .onSnapshot((querySnapshot) => {
         let temp_comments = [];
         querySnapshot.data().comments.forEach((doc) => {
@@ -100,10 +91,18 @@ const PostScreen = (props) => {
                           <Card>
                             <PostCard
                               author={item.commenter}
-                              title={item.id}
                               body={item.comment}
                               removeFunc={async () => {
-                                deleteComment(item.id);
+                                firebase
+                                  .firestore()
+                                  .collection('posts')
+                                  .doc(info.postId)
+                                  .update({
+                                    comments: firebase.firestore.FieldValue.arrayRemove(item.ID),
+                                })
+                                  .then(() => {
+                                    alert('Comment deleted!');
+                                  });
                               }}
                             />
                           </Card>
@@ -123,12 +122,12 @@ const PostScreen = (props) => {
                     firebase
                       .firestore()
                       .collection('posts')
-                      .doc(postID)
+                      .doc(info.postId)
                       .update({
                         comments: firebase.firestore.FieldValue.arrayUnion({
+                          ID: Math.random().toString(36).substring(7),
                           comment: input,
                           commenter: auth.CurrentUser.displayName,
-                          receiver: auth.CurrentUser.uid,
                           created_at: firebase.firestore.Timestamp.now(),
                         }),
                       })
@@ -141,19 +140,26 @@ const PostScreen = (props) => {
                         alert(error);
                       });
 
-                    // saveComment(
-                    //   postID,
-                    //   input,
-                    //   auth.CurrentUser.name,
-                    //   posts.data.author
-                    // )
-
-                    // addNotifications(
-                    //   auth.CurrentUser.username + "-notification-" + Math.random().toString(36).substring(7),
-                    //   posts.name,
-                    //   auth.CurrentUser.name,
-                    //   "comment"
-                    // )
+                      firebase
+                      .firestore()
+                      .collection('users')
+                      .doc(info.data.userId)
+                      .update({
+                        notifications: firebase.firestore.FieldValue.arrayUnion({
+                          ID: Math.random().toString(36).substring(7), 
+                          sender: auth.CurrentUser.displayName,
+                          receiver: auth.CurrentUser.uid,
+                          created_at: firebase.firestore.Timestamp.now(),
+                          type: "comment",
+                        }),
+                      })
+                      .then(() => {
+                        setLoading(false);
+                      })
+                      .catch((error) => {
+                        setLoading(false);
+                        alert(error);
+                      });
                   }}
                 />
               </Card>

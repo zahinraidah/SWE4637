@@ -37,6 +37,7 @@ const savePost = async (userId, input, displayName) => {
             created_at: firebase.firestore.Timestamp.now(),
             likes: 0,
             comments: [],
+            notifications: [],
         })
         .then(() => {
             alert("Post created Successfully!");
@@ -53,7 +54,7 @@ const deletePost = async (ID) => {
         .doc(ID)
         .delete()
         .then(() => {
-            console.log('Post deleted!');
+            alert('Post deleted!');
         });
 }
 
