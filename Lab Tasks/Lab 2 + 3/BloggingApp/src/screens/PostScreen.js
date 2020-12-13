@@ -16,7 +16,7 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 const PostScreen = (props) => {
-  let item = props.route.params;
+  let postInfo = props.route.params;
   const [posts, setPosts] = useState({});
   const [loading, setLoading] = useState(false);
   const [comments, setComments] = useState([]);
@@ -28,7 +28,7 @@ const PostScreen = (props) => {
     firebase
       .firestore()
       .collection('posts')
-      .doc(item.id)
+      .doc(postInfo.id)
       .get()
       .then(documentSnapshot => {
         if (documentSnapshot.exists) {
@@ -39,10 +39,12 @@ const PostScreen = (props) => {
 
   const loadComments = async () => {
     setLoading(true);
+    // let allComments = await getAllComments(postInfo.id);
+    // console.log(allComments);
     firebase
       .firestore()
       .collection('posts')
-      .doc(item.id)
+      .doc(postInfo.id)
       .onSnapshot((querySnapshot) => {
         let temp_comments = [];
         querySnapshot.data().comments.forEach((doc) => {
@@ -93,16 +95,9 @@ const PostScreen = (props) => {
                               author={item.commenter}
                               body={item.comment}
                               removeFunc={async () => {
-                                firebase
-                                  .firestore()
-                                  .collection('posts')
-                                  .doc(info.postId)
-                                  .update({
-                                    comments: firebase.firestore.FieldValue.arrayRemove(item.ID),
-                                })
-                                  .then(() => {
-                                    alert('Comment deleted!');
-                                  });
+                                deleteComment(
+                                  item, postInfo.id, postInfo.data.userId
+                                  );
                               }}
                             />
                           </Card>
@@ -119,47 +114,11 @@ const PostScreen = (props) => {
                   currentFunc={setInput}
                   currentText={input}
                   pressFunction={async () => {
-                    firebase
-                      .firestore()
-                      .collection('posts')
-                      .doc(item.id)
-                      .update({
-                        comments: firebase.firestore.FieldValue.arrayUnion({
-                          ID: Math.random().toString(36).substring(7),
-                          comment: input,
-                          commenter: auth.CurrentUser.displayName,
-                          created_at: firebase.firestore.Timestamp.now(),
-                        }),
-                      })
-                      .then(() => {
-                        setLoading(false);
-                        alert('Comment created successfully!');
-                      })
-                      .catch((error) => {
-                        setLoading(false);
-                        alert(error);
-                      });
-
-                      firebase
-                      .firestore()
-                      .collection('users')
-                      .doc(item.data.userId)
-                      .update({
-                        notifications: firebase.firestore.FieldValue.arrayUnion({
-                          ID: Math.random().toString(36).substring(7), 
-                          sender: auth.CurrentUser.displayName,
-                          receiver: auth.CurrentUser.uid,
-                          created_at: firebase.firestore.Timestamp.now(),
-                          type: "comment",
-                        }),
-                      })
-                      .then(() => {
-                        setLoading(false);
-                      })
-                      .catch((error) => {
-                        setLoading(false);
-                        alert(error);
-                      });
+                    saveComment(
+                      postInfo.id,
+                      input,
+                      postInfo.data.userId
+                    )
                   }}
                 />
               </Card>

@@ -95,13 +95,19 @@ const HomeScreen = (props) => {
                         author={item.data.author}
                         body={item.data.body}
                         removeFunc={async () => {
-                          deletePost(item.id);
+                          if (item.data.userId == firebase.auth().currentUser.uid) {
+                            deletePost(item.id);
+                          }
+                          else {
+                            alert("you are not the author of the post!");
+                          }
                         }}
                       />
                       <Card.Divider />
                       <LikeCommentButton
                         postID={item.id}
                         likes={item.data.likes}
+                        userID ={item.data.userId}
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", item);
                         }}

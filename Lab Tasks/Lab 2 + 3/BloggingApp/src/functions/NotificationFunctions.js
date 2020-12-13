@@ -1,4 +1,6 @@
 import { getAllData, getDataJSON, storeDataJSON } from "../functions/AsyncStorageFunctions";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 const getAllNotifications = async () => {
     let allData = await getAllData();
@@ -14,19 +16,22 @@ const getAllNotifications = async () => {
     }
 }
 
-const addNotifications = async (notify, reciever, sender, type) => {
-    let currentNotification = {
-        notifyID: notify,
-        reciever: reciever,
-        sender: sender,
-        type: type
-      };
-
-      storeDataJSON(
-        JSON.stringify(notify),
-        JSON.stringify(currentNotification)
-      );
-      let UserData2 = await getDataJSON(JSON.stringify(notify));
-      console.log(UserData2);
+const addNotifications = async (userID, type) => {
+    firebase
+    .firestore()
+    .collection('users')
+    .doc(userID)
+    .update({
+      notifications: firebase.firestore.FieldValue.arrayUnion({
+        ID: Math.random().toString(36).substring(7),
+        sender: firebase.auth().currentUser.displayName,
+        receiver: userID,
+        created_at: firebase.firestore.Timestamp.now(),
+        type: type,
+      }),
+    })
+    .catch((error) => {
+      alert(error);
+    });
 }
 export { getAllNotifications, addNotifications };

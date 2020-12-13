@@ -11,14 +11,14 @@ import * as firebase from "firebase";
 import "firebase/firestore";
 
 const SignUpScreen = (props) => {
-  const [username, setUsername] = useState("");
+  const [bday, setBday] = useState("");
   const [Name, setName] = useState("");
   const [SID, setSID] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const image = {uri:"https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg"};
+  const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
 
   return (
     <View style={styles.viewStyle}>
@@ -57,6 +57,14 @@ const SignUpScreen = (props) => {
             }}
           />
 
+          <Input
+            placeholder="Date of Birth"
+            leftIcon={<FontAwesome name="birthday-cake" size={24} color="black" />}
+            onChangeText={function (currentInput) {
+              setBday(currentInput);
+            }}
+          />
+
           <Button
             icon={<AntDesign name="user" size={24} color="white" />}
             title="  Sign Up!"
@@ -77,6 +85,7 @@ const SignUpScreen = (props) => {
                         name: Name,
                         sid: SID,
                         email: Email,
+                        birthday: bday, 
                       })
                       .then(() => {
                         setLoading(false);

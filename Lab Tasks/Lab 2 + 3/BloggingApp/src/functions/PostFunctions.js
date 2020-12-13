@@ -47,6 +47,7 @@ const savePost = async (userId, input, displayName) => {
 }
 
 const deletePost = async (ID) => {
+  console.log(ID);
     firebase
         .firestore()
         .collection('posts')

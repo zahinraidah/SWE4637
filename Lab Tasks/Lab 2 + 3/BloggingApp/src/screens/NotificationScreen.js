@@ -18,7 +18,6 @@ const NotificationScreen = (props) => {
 
   const loadNotifications = async () => {
     setLoading(true);
-    console.log("inside load")
     firebase
       .firestore()
       .collection('users')
@@ -29,7 +28,6 @@ const NotificationScreen = (props) => {
           temp_notifications.push(doc);
         });;
         setNotification(temp_notifications);
-        console.log(Notification);
         setLoading(false);
       });
   };
