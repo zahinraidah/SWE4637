@@ -4,8 +4,6 @@ import { View, StyleSheet, ImageBackground } from "react-native";
 import { Input, Button, Card } from "react-native-elements";
 import { FontAwesome, Feather, AntDesign, Ionicons } from "@expo/vector-icons";
 
-import { storeDataJSON } from "../functions/AsyncStorageFunctions";
-import { getDataJSON } from "../functions/AsyncStorageFunctions";
 
 import * as firebase from "firebase";
 import "firebase/firestore";
@@ -16,7 +14,7 @@ const SignUpScreen = (props) => {
   const [SID, setSID] = useState("");
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
 
   const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
 
@@ -87,10 +85,10 @@ const SignUpScreen = (props) => {
                         email: Email,
                         birthday: bday, 
                       })
-                      .then(() => {
+                      .then((data) => {
                         setLoading(false);
                         alert("Account created successfully!");
-                        console.log(userCreds.user);
+                        alert(userCreds.user.uid);
                         props.navigation.navigate("SignIn");
                       })
                       .catch((error) => {

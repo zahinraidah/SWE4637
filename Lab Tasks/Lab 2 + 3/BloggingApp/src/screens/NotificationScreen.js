@@ -4,8 +4,6 @@ import { Card } from "react-native-elements";
 import { AuthContext } from "../providers/AuthProvider";
 import HeaderTop from "../components/HeaderTop";
 import NotificationCard from "../components/NotificationCard";
-import { getAllNotifications } from "../functions/NotificationFunctions";
-import { getAllComments } from "../functions/PostFunctions";
 
 import * as firebase from "firebase";
 import "firebase/firestore";
@@ -38,7 +36,7 @@ const NotificationScreen = (props) => {
 
   return (
     <AuthContext.Consumer>
-      {(auth) => (
+      {() => (
         <View style={styles.viewStyle}>
           <ImageBackground source={image} style={styles.image}>
           <HeaderTop

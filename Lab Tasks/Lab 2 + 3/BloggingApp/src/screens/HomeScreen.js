@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from "react";
 
 import { LogBox, View, StyleSheet, FlatList, ActivityIndicator, ImageBackground } from "react-native";
-import { Card, Button, Text, Avatar, Input } from "react-native-elements";
+import { Card, Button, Input } from "react-native-elements";
 
-import { AntDesign, Entypo } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import { AuthContext } from "../providers/AuthProvider";
 import { useNetInfo } from "@react-native-community/netinfo";
 
 import PostCard from "./../components/PostCard";
 import HeaderTop from "../components/HeaderTop";
-import LikeCommentButton from "../components/LikeCommentButton"
+import LikeCommentButton from "../components/LikeCommentButton";
 
 import * as firebase from "firebase";
 import "firebase/firestore";
 
-import { getAllPosts, savePost, deletePost } from "../functions/PostFunctions";
+import { savePost, deletePost } from "../functions/PostFunctions";
 
 const image = { uri: "https://cdn.hipwallpaper.com/i/97/16/ZcjRI9.jpg" };
 
@@ -84,7 +84,6 @@ const HomeScreen = (props) => {
               />
             </Card>
             <ActivityIndicator size="large" color="red" animating={loading} />
-
             <FlatList
               data={posts}
               renderItem={({ item }) => {
@@ -107,7 +106,7 @@ const HomeScreen = (props) => {
                       <LikeCommentButton
                         postID={item.id}
                         likes={item.data.likes}
-                        userID ={item.data.userId}
+                        userID={item.data.userId}
                         navigateFunc={() => {
                           props.navigation.navigate("PostScreen", item);
                         }}

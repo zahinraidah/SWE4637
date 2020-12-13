@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { LogBox, View, StyleSheet, FlatList, ActivityIndicator, ScrollView, ImageBackground } from "react-native";
 import { Card } from "react-native-elements";
-import PostCard from "./../components/PostCard";
 
 import { AuthContext } from "../providers/AuthProvider";
 
-import { getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
-import { getAllComments, saveComment, deleteComment } from "../functions/CommentFunctions";
-import { addNotifications } from "../functions/NotificationFunctions";
+import { saveComment, deleteComment } from "../functions/CommentFunctions";
 
 import HeaderTop from "./../components/HeaderTop";
 import InputCard from "../components/InputCard";
+import PostCard from "./../components/PostCard";
 
 import * as firebase from "firebase";
 import "firebase/firestore";
@@ -40,7 +38,7 @@ const PostScreen = (props) => {
   const loadComments = async () => {
     setLoading(true);
     // let allComments = await getAllComments(postInfo.id);
-    // console.log(allComments);
+    // console.log(allComments.data());
     firebase
       .firestore()
       .collection('posts')
@@ -65,7 +63,7 @@ const PostScreen = (props) => {
   if (!loading) {
     return (
       <AuthContext.Consumer>
-        {(auth) => (
+        {() => (
           <View style={styles.viewStyle}>
             <ImageBackground source={image} style={styles.image}>
               <HeaderTop

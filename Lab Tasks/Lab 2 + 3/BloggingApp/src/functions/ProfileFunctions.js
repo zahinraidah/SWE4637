@@ -1,5 +1,8 @@
 import { getAllData, getDataJSON, removeData } from "../functions/AsyncStorageFunctions";
 
+import * as firebase from "firebase";
+import "firebase/firestore";
+
 const getUserInfo = async (name) => {
     let allData = await getAllData();
     let userInfo = [];
@@ -15,13 +18,27 @@ const getUserInfo = async (name) => {
     }
 }
 
-const deleteUserInfo = async (name) => {
-    let allData = await getUserInfo(name);
-    if (allData != null) {
-        for (let data of allData) {
-            await removeData(data);
-        }
-    }
+const deleteUserInfo = async () => {
+
+    firebase
+        .firestore()
+        .collection("posts")
+        .where("userId", "in", [firebase.auth().currentUser.uid])
+        .get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                doc.ref.delete()
+            });
+        });
+
+    firebase
+        .firestore()
+        .collection('users')
+        .doc(firebase.auth().currentUser.uid)
+        .delete()
+
+    firebase.auth().currentUser.delete()
+    alert('User deleted!');
 }
 
 export { getUserInfo, deleteUserInfo };

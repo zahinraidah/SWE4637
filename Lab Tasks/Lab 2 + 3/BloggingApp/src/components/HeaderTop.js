@@ -2,9 +2,11 @@ import React from "react";
 import { Header } from "react-native-elements";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import * as firebase from "firebase";
+import "firebase/firestore";
+
 import { AuthContext } from "../providers/AuthProvider";
 const HeaderTop = (props) => {
-    const icon = [<MaterialCommunityIcons name="logout-variant" size={24} color="black" />]
     return (
         <AuthContext.Consumer>
             {(auth) => (

@@ -38,8 +38,9 @@ const savePost = async (userId, input, displayName) => {
             likes: 0,
             comments: [],
         })
-        .then(() => {
+        .then((data) => {
             alert("Post created Successfully!");
+            alert(data.id);
         })
         .catch((error) => {
             alert(error);

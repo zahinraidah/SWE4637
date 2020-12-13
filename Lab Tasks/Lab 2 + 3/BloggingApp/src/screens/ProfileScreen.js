@@ -27,7 +27,6 @@ const ProfileScreen = (props) => {
       .firestore()
       .collection("posts")
       .where("userId", "in", [firebase.auth().currentUser.uid])
-      .orderBy("created_at", "desc")
       .onSnapshot((querySnapshot) => {
         let temp_posts = [];
         querySnapshot.forEach((doc) => {
@@ -76,7 +75,7 @@ const ProfileScreen = (props) => {
                   source={profile}
                   style={styles.imageStyle} />
                 <Text style={{ fontSize: 32 }}>
-                  {auth.CurrentUser.displayName}
+                  {firebase.auth().currentUser.displayName}
                 </Text>
               </View>
             </Card>
@@ -89,22 +88,14 @@ const ProfileScreen = (props) => {
               alignSelf='center'
               icon={<AntDesign name="deleteuser" size={24} color="white" />}
               onPress={async () => {
-                firebase
-                  .firestore()
-                  .collection('users')
-                  .doc(firebase.auth().currentUser.uid)
-                  .delete()
-                  .then(() => {
-                    alert('User deleted!');
-                  });
-                deleteUserInfo(auth.CurrentUser.username);
+                deleteUserInfo();
                 auth.setIsLoggedIn(false);
                 auth.setCurrentUser({});
               }}
             />
             <Card>
               <View>
-                <Text style={{ alignSelf: "center", fontSize: 18 }}>
+              <Text style={{ alignSelf: "center", fontSize: 18 }}>
                   Born on: {user.birthday} {"\n"}
                   Email: {user.email} {"\n"}
                   SID: {user.sid}
@@ -121,10 +112,10 @@ const ProfileScreen = (props) => {
                         author={item.data.author}
                         body={item.data.body}
                         removeFunc={async () => {
-                          if (item.data.userId == firebase.auth().currentUser.uid){
+                          if (item.data.userId == firebase.auth().currentUser.uid) {
                             deletePost(item.id);
                           }
-                          else{
+                          else {
                             alert("you are not the author of the post!");
                           }
                         }}
