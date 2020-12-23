@@ -3,7 +3,7 @@ import React from "react";
 const Dropdown = (props) => {
   return (
     <div>
-      <a className='dropdown-trigger btn' href='#' data-target='dropdown1'>Drop Me!</a>
+      <a className='dropdown-trigger btn' href='#' data-target='dropdown1'>Sort</a>
 
       <ul id="dropdown1" className="dropdown-content">
         <li><a href="#!">one</a></li>

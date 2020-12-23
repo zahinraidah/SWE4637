@@ -1,6 +1,8 @@
+/* eslint-disable eqeqeq */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 const BookCard = (props) => {
   console.log(props.data);
-  const ImageURL = props.data.volumeInfo.imageLinks.smallThumbnail;
+  const ImageURL = props.data.volumeInfo.imageLinks.thumbnail;
   const BookTitle = props.data.volumeInfo.title;
   const BookAuthor = props.data.volumeInfo.authors;
   return (
@@ -14,12 +16,11 @@ const BookCard = (props) => {
               style={{ width: "100", height: "200" }}
             />
           ) : (
-            <img
-              src={ImageURL}
-              alt="book cover"
-              width="100px"
-            />
-          )}
+              <img
+                src={ImageURL}
+                alt="book cover"
+                style={{ width: "100", height: "200" }} />
+            )}
 
           <span className="card-title"><b>{BookTitle}</b></span>
         </div>
